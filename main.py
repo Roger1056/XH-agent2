@@ -36,6 +36,7 @@ _BACKEND = _PROJECT_ROOT / "backend"
 if str(_BACKEND) not in sys.path:
     sys.path.insert(0, str(_BACKEND))
 
+from backend.src.agents.k1_path_planner import build_learning_path  # noqa: E402
 from backend.src.agents.k1_pre_ask import pre_ask_pipeline  # noqa: E402
 from backend.src.api.exams import router as exams_router  # noqa: E402
 from backend.src.api.pretests import router as pretests_router  # noqa: E402
@@ -474,6 +475,9 @@ def _generation_response(result: dict[str, Any]) -> dict[str, Any]:
         "resources": resources,
         "knowledge_radar": _build_knowledge_radar(diagnosis),
         "resource_match_curve": _build_resource_match_curve(diagnosis, resources),
+        "learning_path": build_learning_path(
+            diagnosis, learner_id=result.get("task_id", "unknown")
+        ),
         "generation_errors": result.get("generation_errors", []),
         "audit": result.get("audit_result", []),
         "debate": _debate_summary(result.get("debate_result", {})),
