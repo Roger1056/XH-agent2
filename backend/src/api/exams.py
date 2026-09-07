@@ -13,6 +13,7 @@ from backend.src.agents.k1_exam_pipeline import (
     run_exam_pipeline,
 )
 from backend.src.agents.k1_post_feedback import post_feedback_pipeline
+from backend.src.agents.k1_scaffold import scaffold_pipeline
 from backend.src.persistence.profile_store import ProfileStore, profile_store
 
 router = APIRouter(prefix="/api/exams", tags=["exams"])
@@ -280,3 +281,43 @@ async def submit_exam(
         "adaptive_profile": dict(snapshot.get("profile") or {}) if snapshot else {},
         "feedback": feedback,
     }
+
+
+class ScaffoldRequest(BaseModel):
+    """脚手架式辅导请求（附录 B2/B4）。
+
+    mode 分支：疑问句 + 能定位到知识点 → 'scaffold'；
+    否则走原答疑（mode='direct'，不硬套脚手架）。
+    """
+    learner_id: str = Field(default="", max_length=160)
+    question: str = Field(min_length=1, max_length=4000)
+    current_tier: int = Field(default=0, ge=0, le=3)
+    student_answer: str = Field(default="", max_length=4000)
+    knowledge_map: dict[str, Any] | None = Field(default=None)
+    skill_gaps: list[dict[str, Any]] | None = Field(default=None)
+
+    @field_validator("question")
+    @classmethod
+    def strip_question(cls, value: str) -> str:
+        value = value.strip()
+        if not value:
+            raise ValueError("question cannot be blank")
+        return value
+
+
+@router.post("/scaffold")
+async def submit_scaffold(request: ScaffoldRequest) -> dict[str, object]:
+    """脚手架式辅导：三档提示（L1 引导思考 → L2 给线索 → L3 给答案）。
+
+    复用 k1_scaffold 的纯规则判定 + k1_exercise 的归一化匹配，
+    未触发脚手架（非疑问句 / 定位不到知识点）时返回 mode='direct'，由前端走原答疑。
+    """
+    result = scaffold_pipeline(
+        question=request.question,
+        current_tier=request.current_tier,
+        student_answer=request.student_answer,
+        knowledge_map=request.knowledge_map,
+        skill_gaps=request.skill_gaps,
+    )
+    result["learner_id"] = request.learner_id
+    return result
