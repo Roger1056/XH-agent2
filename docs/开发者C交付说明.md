@@ -1,80 +1,63 @@
-# 开发者 C 前端交付说明
+# 开发者 C B6 联调交付说明
 
-本次修改基于你提供的 `XH-agent2-main.zip`，完成三天冲刺方案中的前端图表、学习路径和分步答疑集成。后端已有路径生成器、统一响应中的 `learning_path` 和 `/api/exams/scaffold`，本次直接复用，没有更改 A/B 的实现或接口契约。
+本次基于 `XH-agent2-开发者C完成版(2).zip` 修正答疑面板的 direct 分支，落实开发者 B 的附录 B6。原图表、学习路径和分步脚手架继续保留。
 
-## 已完成
+## 本次完成
 
-- 两个独立纯 SVG 组件：`frontend/src/learning-charts.tsx` 中的 `KnowledgeRadarChart` 与 `DifficultyMatchCurve`。支持空数据提示，雷达图过滤非有限数值、限制百分比范围、少于三维时显示数值列表；长知识点名通过编号和完整图例展示。难度图按资源顺序对比资源难度和学习者推荐难度，未知难度不会冒充入门。
-- `frontend/src/learning-path.tsx` 展示后端节点原始顺序、前置依赖、预计时长和完成状态。按资源 ID 优先匹配，未提供 ID 时按类型关联；有资源时可以跳转。接口没有路径时保留原知识体系展示；空路径会明确提示。
-- `frontend/src/scaffold-panel.tsx` 接入真实脚手架接口，逐次请求并保留 L1/L2/L3 历史；支持提交思考和“我不知道”跳级；新问题从零开始。只有完整答案或普通答疑结果可以加入资源。
-- `frontend/src/learning-session.ts` 新增类型化 API 适配，发送学习者 ID、原始问题、当前档位、学生回答和薄弱知识点。校验响应档位与答案标记，阻止请求连点，脚手架请求超时后可重试；直接答疑继续走原 `/api/learning-questions`。
-- 在侧栏工作台、全屏工作台、诊断弹窗接入路径；修正旧 CSS 把全屏路径隐藏的问题。
-- 新增浏览器集成测试和隔离测试服务。Playwright 仅作为开发依赖，不增加生产图表库。
+- 答疑先调用 `POST /api/exams/scaffold`；前端保留档位和提示历史，后续请求携带原问题、`current_tier` 和学生回答，支持 L1 → L2 → L3，以及“不知道”跳至 L3。
+- 返回 `mode=direct, tier=0` 时，不读取其空 content，也兼容只有 mode/tier/reason 的最小响应。三个 reason 均统一调用 `GET /api/knowledge/search?q=<编码后的原问题>&top_k=5`。
+- 新增 `frontend/src/knowledge-search.tsx`，由全局知识检索面板与答疑面板共用请求函数及结果组件。答疑展示 results 的文档标题、原文片段与文档来源，不把检索片段包装成模型生成的完整答案。
+- 未命中结果时提示补充问题；检索 HTTP 错误、非法响应及 30 秒超时均可重试。空结果不可加入资源，有结果时加入资源会保留文档来源。
+- 本次答疑链路不再请求 `/api/learning-questions`。该旧函数仍供其他既有功能使用，未删除。没有新增或修改生产后端接口。
+- 隔离测试服务以固定知识检索结果替换旧自由文本答疑样例；浏览器测试增加全部 B6 分支验证。
 
-## 启动正常项目
+## 合入方式
 
-在项目根目录，按原 README 配置 Python 环境、知识库及模型密钥，然后启动后端：
+`developer-c-b6.patch` 是相对于你本次提供的“开发者 C 完成版”的增量补丁，不是相对于最初项目的累计补丁。已有旧版 C 代码的团队仓库，建议先提交或备份当前修改，然后在仓库根目录执行：
 
 ```sh
-pip install -r requirements.txt
-python main.py
+git apply --check developer-c-b6.patch
+git apply developer-c-b6.patch
 ```
 
-另开终端启动前端：
+如果团队只有原始项目，需先合入原来的 `developer-c(2).patch`，再合入本次增量。若队友已修改同一文件，请审阅冲突后选择性合入；完整源码包适合独立运行，不宜直接覆盖队友的最新仓库。
+
+## 启动与验收
+
+正常项目按 README 配置后端和知识库，运行 `python main.py`；前端运行 `npm ci`、`npm run dev`。本次没有改变依赖清单或 npm 锁文件。
+
+隔离浏览器验收不调用真实模型或知识库，先确保 8000、5175 端口空闲。分别打开三个终端：
 
 ```sh
-cd frontend
-npm ci
-npm run dev
-```
-
-生成资源后进入工作台，查看图表和学习路径，点击配套资源，在下方答疑面板输入“机器人坐标系如何选择？”。点击“下一步提示”进入 L2，再点击“查看完整答案”进入 L3。输入“你好”可检查普通答疑分支。
-
-旧 `samples.json` 若不含 `learning_path`，不会伪造个性化路径；请使用新后端生成结果，或下述测试服务的样例验收。
-
-## 可重复的浏览器集成测试
-
-测试服务复用真实 `exams` 路由和路径生成器；资源生成样例、普通答疑响应是固定测试数据，不调用 LLM。请先停止占用 8000 端口的普通后端，避免把测试服务和生产服务混用。
-
-终端一，在项目根目录启动隔离测试服务：
-
-```sh
+# 终端一：项目根目录
 pip install fastapi uvicorn pydantic python-dotenv loguru
 python -m uvicorn tests.dev_c_server:app --host 127.0.0.1 --port 8000
 ```
 
-终端二：
-
 ```sh
+# 终端二
 cd frontend
 npm ci
 npm run build
-node node_modules/vite/bin/vite.js preview --host 127.0.0.1 --port 5175
+npm run preview -- --host 127.0.0.1 --port 5175
 ```
 
-终端三：
-
 ```sh
+# 终端三
 cd frontend
 npx playwright install chromium
 npm run test:integration
 ```
 
-Windows 已安装 Edge 时，可在 PowerShell 用 `$env:BROWSER_CHANNEL='msedge'` 后运行测试，免下载 Chromium。可选环境变量 `APP_URL`、`API_URL` 用于测试地址，`SCREENSHOT_DIR` 用于截图。生产预览默认沿用 Vite 的 API 代理配置，后端端口为 8000。
+Windows 已安装 Edge 可用 PowerShell 设置 `$env:BROWSER_CHANNEL='msedge'` 后运行测试，无需安装 Chromium。
 
-测试覆盖：L1 → L2 → L3、卡住直接 L3、新问题重置、普通答疑回退、503 后重试、完整答案加入资源、路径跳转、SVG 展示、全屏模式、390px 窄屏答疑、浏览器异常检查。
+人工验收：加载样例、打开配套资源，在答疑面板输入“机器人坐标系如何选择？”并逐步展开；输入“你好”“这个是什么？”“ROS2 如何入门？”分别验证三种 direct 原因。真实服务下的检索结果取决于团队知识库，没有匹配时应显示空结果提示。
 
-## 验证结果与范围
+## 本次实测
 
-- `npm run build`：通过，包含 TypeScript 类型检查和 Vite 生产构建。
-- `ruff check .`：通过。
-- `pytest backend/tests/test_k1_path_planner.py backend/tests/test_k1_scaffold.py backend/tests/test_exam_api.py -q`：24 项通过。
-- 浏览器集成测试：使用 Edge 无头浏览器通过；人工查看了图表、路径、答疑截图。
-- 全仓 `pytest -q --maxfail=1` 已尝试，但在收集 `agent1/test_run.py` 时因当前隔离测试环境缺少 `requests` 中止，因此不声称全仓测试通过。
-- 未配置真实模型密钥及完整知识库，没有验证真实模型生成、知识检索和画像持久化的整条生产链路。提交前请在团队环境完成“诊断 → 路径 → 资源 → 答题 → 脚手架”的最终验收。
+- TypeScript 检查及 Vite 生产构建通过（Node 24.19.0；本机通过 pnpm 按 package.json 安装依赖，Vite 6.4.3、TypeScript 5.9.3；未声称已运行 npm ci）。
+- Edge 无头浏览器集成测试通过：真实脚手架路由的 L1/L2/L3、卡住跳级、新问题重置；三种真实 direct reason；原问题编码和 top_k=5；最小 direct 响应；空结果；检索 503/非法结构后的重试；不调用旧 QA；加入资源；路径导航、图表、全屏和 390px 窄屏结果展示。无浏览器异常，已查看截图。
+- `pytest backend/tests/test_k1_scaffold.py backend/tests/test_exam_api.py backend/tests/test_k1_path_planner.py -q`：24 项通过，有测试配置/依赖弃用警告。
+- `git diff --check` 通过。补丁在旧版源码基线上校验。
 
-## 合入方式
-
-压缩包包含完整源码，不含 `node_modules`、虚拟环境或临时测试缓存。也提供相对于原压缩包的 `developer-c.patch`；如团队已有后续修改，优先审阅补丁并选择性合入，不要直接覆盖队友代码。
-
-新测试服务只用于开发验证；后端业务文件未修改。
+验证范围：脚手架使用项目真实后端逻辑，知识检索使用隔离样例及浏览器故障注入。未配置真实模型、ChromaDB 或团队知识库，尚未完成生产环境全链路验收；本次未运行全仓测试。部分 API 返回模拟数据的测试仅验证前端契约和展示，不证明真实检索质量。

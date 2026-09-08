@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState } from "react";
-import { askStudyQuestion, requestScaffold, type LearnerQuestionResponse, type ScaffoldResponse } from "./learning-session";
+import { requestScaffold, type LearnerQuestionResponse, type ScaffoldStep } from "./learning-session";
 
-export function ScaffoldPanel({ topic, context, skillGaps, onApplyRevision }: {
+import { searchKnowledge, KnowledgeResults, type KnowledgeHit } from "./knowledge-search";
+
+export function ScaffoldPanel({ skillGaps, onApplyRevision }: {
   topic: string;
   context: string;
   skillGaps?: Array<{ topic?: string; current_level?: number; target_level?: number; priority?: string }>;
@@ -10,8 +12,8 @@ export function ScaffoldPanel({ topic, context, skillGaps, onApplyRevision }: {
   const [question, setQuestion] = useState("");
   const [activeQuestion, setActiveQuestion] = useState("");
   const [reply, setReply] = useState("");
-  const [steps, setSteps] = useState<ScaffoldResponse[]>([]);
-  const [direct, setDirect] = useState<LearnerQuestionResponse | null>(null);
+  const [steps, setSteps] = useState<ScaffoldStep[]>([]);
+  const [direct, setDirect] = useState<KnowledgeHit[] | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [applied, setApplied] = useState(false);
@@ -30,7 +32,8 @@ export function ScaffoldPanel({ topic, context, skillGaps, onApplyRevision }: {
       const response = await requestScaffold(original, continuing ? latest?.tier ?? 0 : 0, studentAnswer, skillGaps);
       if (id !== sequence.current) return;
       if (response.mode === "direct") {
-        const answer = await askStudyQuestion(original, topic.slice(0, 500), context.slice(0, 12000));
+        setSteps([]);
+        const answer = await searchKnowledge(original);
         if (id !== sequence.current) return;
         setDirect(answer);
       } else {
@@ -43,7 +46,12 @@ export function ScaffoldPanel({ topic, context, skillGaps, onApplyRevision }: {
       if (id === sequence.current) { pending.current = false; setBusy(false); }
     }
   };
-  const finalAnswer: LearnerQuestionResponse | null = direct ?? (latest?.revealed_answer ? {
+  const finalAnswer: LearnerQuestionResponse | null = direct?.length ? {
+    answer: direct.map((hit) => hit.content).join("\n\n"),
+    suggestions: [],
+    revisionTitle: `知识检索 · ${activeQuestion}`,
+    revisionContent: direct.map((hit) => `${hit.doc_title || hit.doc_id || "知识文档"}\n${hit.content}\n来源：${hit.doc_id || hit.doc_title || "知识库（未提供文档标识）"}`).join("\n\n"),
+  } : (latest?.revealed_answer ? {
     answer: latest.content,
     suggestions: [],
     revisionTitle: `学习答疑 · ${latest.knowledge_point}`,
@@ -51,19 +59,19 @@ export function ScaffoldPanel({ topic, context, skillGaps, onApplyRevision }: {
   } : null);
   return <section aria-label="分步学习答疑" className="rounded-2xl bg-white/[0.07] p-5">
     <h5 className="text-lg font-semibold text-white">学习答疑 · 先思考，再看答案</h5>
-    <p className="mt-2 text-xs leading-6 text-white/60">支持的知识点将提供分步提示，其他问题使用普通答疑。</p>
+    <p className="mt-2 text-xs leading-6 text-white/60">支持的知识点将提供分步提示，其他问题将展示知识库检索片段与来源。</p>
     <form className="mt-4 grid gap-3" onSubmit={(event) => { event.preventDefault(); void ask(); }}>
       <textarea aria-label="学习问题" maxLength={1500} disabled={busy} value={question} onChange={(event) => setQuestion(event.target.value)} placeholder="例如：机器人坐标系如何选择？" className="min-h-24 w-full rounded-xl bg-black/20 p-3 text-sm text-white focus:ring-2 focus:ring-[#B99DFF]" />
       <button type="submit" disabled={busy || !question.trim()} className="rounded-full bg-white px-4 py-3 text-sm font-semibold text-[#192837] disabled:opacity-50">{busy ? "正在获取回答…" : "开始提问"}</button>
     </form>
     <div aria-live="polite" aria-busy={busy} className="mt-4 grid gap-3">
-      {steps.length > 0 && <p className="break-words text-xs text-white/60">当前问题：{activeQuestion}</p>}
+      {(steps.length > 0 || direct !== null) && <p className="break-words text-xs text-white/60">当前问题：{activeQuestion}</p>}
       {steps.map((step) => <article key={step.tier} className="rounded-xl bg-[#0B1D2A] p-4">
         <h6 className="text-sm font-semibold text-[#C7B3F5]">L{step.tier} · {step.tier === 1 ? "引导思考" : step.tier === 2 ? "给出线索" : "完整答案"}</h6>
         <p className="mt-2 whitespace-pre-wrap break-words text-sm leading-7 text-white/85">{step.content}</p>
         {step.revealed_answer && step.kb_source && <p className="mt-3 break-all text-xs text-white/60">知识库来源：{step.kb_source}</p>}
       </article>)}
-      {direct && <article className="rounded-xl bg-[#0B1D2A] p-4 text-sm leading-7 text-white/85"><h6 className="font-semibold">针对你的问题</h6><p className="mt-2 whitespace-pre-wrap">{direct.answer}</p>{direct.suggestions.map((item, i) => <p key={i}>{item}</p>)}</article>}
+      {direct !== null && <div className="rounded-xl bg-[#0B1D2A] p-4 text-sm leading-7 text-white/85"><h6 className="font-semibold">知识库检索结果</h6>{direct.length ? <KnowledgeResults results={direct} /> : <p className="mt-2">未找到相关知识，请补充设备型号、故障码或具体知识点后重新提问。</p>}</div>}
     </div>
     {latest && !latest.revealed_answer && !direct && <form className="mt-4 grid gap-3" onSubmit={(event) => { event.preventDefault(); void ask(true, reply.trim()); }}>
       <textarea aria-label="我的思考" maxLength={4000} value={reply} disabled={busy} onChange={(event) => setReply(event.target.value)} placeholder="写下你的判断，或点击下方按钮继续" className="min-h-20 rounded-xl bg-black/20 p-3 text-sm text-white" />

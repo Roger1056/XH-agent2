@@ -11,6 +11,12 @@ const fs = require('node:fs/promises');
   const root = process.env.APP_URL || 'http://127.0.0.1:5175';
   const backend = process.env.API_URL || 'http://127.0.0.1:8000';
   const requests = [];
+  const searchRequests = [];
+  const legacyRequests = [];
+  page.on("request", (request) => {
+    if (request.url().includes("/api/knowledge/search?")) searchRequests.push(new URL(request.url()));
+    if (request.url().includes("/api/learning-questions")) legacyRequests.push(request.url());
+  });
   page.on('request', (request) => { if (request.url().endsWith('/api/exams/scaffold')) requests.push(request.postDataJSON()); });
   try {
     const fixture = await (await fetch(backend + '/fixture')).json();
@@ -51,10 +57,45 @@ const fs = require('node:fs/promises');
     await panel.getByRole('button', { name: '我不知道，查看答案' }).click();
     await panel.getByRole('heading', { name: 'L3 · 完整答案' }).waitFor();
     assert.equal(await panel.getByRole('heading', { name: 'L2 · 给出线索' }).count(), 0);
-    // A non-scaffold question must call the original QA endpoint.
-    await panel.getByLabel('学习问题').fill('你好');
+    assert.equal(searchRequests.length, 0, 'scaffold steps must not search');
+    // Exercise all three real B6 branches with the original question preserved.
+    for (const [question, reason] of [
+      ['你好 & 欢迎+学习', 'not_interrogative'],
+      ['这个是什么？', 'unresolved_knowledge_point'],
+      ['ROS2 如何入门？', 'no_scaffold_templates'],
+    ]) {
+      await panel.getByLabel('学习问题').fill(question);
+      const responsePromise = page.waitForResponse((response) => response.url().endsWith('/api/exams/scaffold'));
+      await panel.getByRole('button', { name: '开始提问', exact: true }).click();
+      assert.equal((await (await responsePromise).json()).reason, reason);
+      await panel.getByText('知识检索测试片段：' + question, { exact: true }).waitFor();
+      assert.equal(searchRequests.at(-1).searchParams.get('q'), question);
+      assert.equal(searchRequests.at(-1).searchParams.get('top_k'), '5');
+      assert.equal(await panel.getByRole('heading', { name: /L[123] ·/ }).count(), 0);
+      assert.match(await panel.innerText(), /来源：fixture-kb-001/);
+    }
+    if (process.env.SCREENSHOT_DIR) {
+      await fs.mkdir(process.env.SCREENSHOT_DIR, { recursive: true });
+      await panel.screenshot({ path: process.env.SCREENSHOT_DIR + '/direct-results.png' });
+    }
+    await panel.getByRole('button', { name: '将补充内容加入当前资源' }).click();
+    await panel.getByRole('button', { name: '补充已加入当前资源' }).waitFor();
+    // Minimal direct payload: content is not required and must never be used.
+    await page.route('**/api/exams/scaffold', (route) => route.fulfill({ json: { mode: 'direct', tier: 0, reason: 'not_interrogative' } }), { times: 1 });
+    await page.route('**/api/knowledge/search?*', (route) => route.fulfill({ json: { results: [] } }), { times: 1 });
     await panel.getByRole('button', { name: '开始提问', exact: true }).click();
-    await panel.getByText('这是普通答疑接口的测试响应。', { exact: true }).waitFor();
+    await panel.getByText(/未找到相关知识/).waitFor();
+    assert.equal(await panel.getByRole('button', { name: '将补充内容加入当前资源' }).count(), 0);
+    // HTTP failure and invalid result shape must be retryable, never an empty success.
+    for (const mocked of [{ status: 503, json: { detail: 'unavailable' } }, { json: { results: null } }]) {
+      await page.route('**/api/knowledge/search?*', (route) => route.fulfill(mocked), { times: 1 });
+      await panel.getByRole('button', { name: '开始提问', exact: true }).click();
+      await panel.getByRole('alert').waitFor();
+      assert.equal(await panel.getByRole('button', { name: '将补充内容加入当前资源' }).count(), 0);
+      await panel.getByRole('button', { name: '开始提问', exact: true }).click();
+      await panel.getByText('知识检索测试片段：ROS2 如何入门？', { exact: true }).waitFor();
+    }
+    assert.deepEqual(legacyRequests, [], 'B6 must not call the legacy QA endpoint');
     // Failed requests must stay retryable without revealing stale answers.
     await page.route('**/api/exams/scaffold', (route) => route.fulfill({ status: 503, json: { detail: '服务暂不可用' } }), { times: 1 });
     await panel.getByLabel('学习问题').fill('坐标系是什么？');
@@ -81,11 +122,14 @@ const fs = require('node:fs/promises');
     await expandedPanel.getByRole('heading', { name: 'L1 · 引导思考' }).waitFor();
     await page.getByRole('button', { name: '收缩为侧边栏', exact: true }).click();
     await page.setViewportSize({ width: 390, height: 844 });
+    await panel.getByLabel('学习问题').fill('ROS2 如何入门？');
+    await panel.getByRole('button', { name: '开始提问', exact: true }).click();
+    await panel.getByText('知识检索测试片段：ROS2 如何入门？', { exact: true }).waitFor();
     await panel.scrollIntoViewIfNeeded();
     assert.ok(await panel.evaluate((el) => el.scrollWidth <= el.clientWidth + 1), 'Mobile panel overflows');
     if (process.env.SCREENSHOT_DIR) await panel.screenshot({ path: process.env.SCREENSHOT_DIR + '/scaffold-mobile.png' });
     assert.deepEqual(errors, []);
-    console.log('PASS: real scaffold API L1 → L2 → L3; stuck → L3; reset; direct fallback; retry; path/resource navigation; charts; mobile panel; no browser exceptions.');
+    console.log('PASS: real scaffold API L1 → L2 → L3; stuck → L3; reset; B6 all reasons / original query / minimal payload / empty / error retry / no legacy QA; path/resource navigation; charts; mobile panel; no browser exceptions.');
   } finally {
     await browser.close();
   }

@@ -1,4 +1,4 @@
-"""C integration harness: real exams router/path planner, fixture generation and direct QA.
+"""C integration harness: real exams router/path planner, fixture generation and knowledge search.
 
 Run from repository root: python -m uvicorn tests.dev_c_server:app --port 8000
 No LLM, knowledge database or production profile is required.
@@ -89,12 +89,8 @@ def fixture():
     }
 
 
-@app.post("/api/learning-questions")
-def direct_answer():
-    return {
-        "answer": "这是普通答疑接口的测试响应。",
-        "suggestions": [],
-        "revisionTitle": "测试补充",
-        "revisionContent": "普通答疑测试补充内容。",
-    }
+@app.get("/api/knowledge/search")
+def knowledge_search(q: str, top_k: int = 5):
+    return {"results": [{"doc_id": "fixture-kb-001", "doc_title": "机器人学习知识库",
+                         "content": f"知识检索测试片段：{q}"}][:top_k]}
 

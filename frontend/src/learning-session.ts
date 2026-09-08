@@ -123,13 +123,19 @@ function getLearnerId() {
   return learnerId;
 }
 
-export type ScaffoldResponse = {
-  mode: "scaffold" | "direct";
+export type ScaffoldStep = {
+  mode: "scaffold";
   tier: number;
   content: string;
   knowledge_point: string;
   revealed_answer: boolean;
   kb_source: string | null;
+};
+
+export type ScaffoldResponse = ScaffoldStep | {
+  mode: "direct";
+  tier: 0;
+  reason?: string;
 };
 
 export async function requestScaffold(
@@ -149,7 +155,10 @@ export async function requestScaffold(
     });
     const payload = restoreEscapedApiText(await response.json().catch(() => ({}))) as ScaffoldResponse & { detail?: unknown };
     if (!response.ok) throw new Error(formatApiError(payload.detail));
-    if (payload.mode === "direct") return payload;
+    if (payload.mode === "direct") {
+      if (payload.tier !== 0) throw new Error("提示服务返回的数据不完整，请重试。");
+      return payload;
+    }
     if (payload.mode !== "scaffold" || ![1, 2, 3].includes(payload.tier)
       || payload.tier <= currentTier || typeof payload.content !== "string" || !payload.content.trim()
       || payload.revealed_answer !== (payload.tier === 3)

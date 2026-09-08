@@ -1,5 +1,6 @@
 import { KnowledgeRadarChart, DifficultyMatchCurve, type ResourceMatchPoint } from "./learning-charts";
 import { PlannedLearningPath, type LearningPath } from "./learning-path";
+import { searchKnowledge, KnowledgeResults, type KnowledgeHit } from "./knowledge-search";
 import { ScaffoldPanel } from "./scaffold-panel";
 import { AnimatePresence, motion, useMotionValue, useReducedMotion, useSpring, useTransform } from "framer-motion";
 import { ArrowDown, ArrowRight, ArrowRightCircle, ArrowUp, BrainCircuit, Download, Maximize2, Menu, Minimize2, Search, ShieldCheck, Sparkles, X } from "lucide-react";
@@ -1048,7 +1049,7 @@ function BrandMixWarningBanner({ warning }: { warning?: string }) {
 
 type GlobalAlarmHit = { brand?: string; alarm_code?: string; fault_name?: string; symptom?: string; doc_id?: string; doc_title?: string };
 type GlobalInstructionHit = { brand?: string; instruction?: string; doc_id?: string; doc_title?: string };
-type GlobalDocumentHit = { doc_id?: string; doc_title?: string; content?: string };
+type GlobalDocumentHit = KnowledgeHit;
 
 const BRAND_ALIASES: Array<[string, string]> = [
   ["库卡", "kuka"],
@@ -1275,12 +1276,7 @@ function GlobalSearch() {
           {docHits.length ? (
             <div className="mt-2">
               <p className="px-3 py-2 text-xs font-semibold tracking-[0.12em] text-[#192837]/50">{"知识文档"}</p>
-              {docHits.map((e, i) => (
-                <button key={`doc-${i}`} onClick={() => openDetail(`/api/knowledge/documents/${encodeURIComponent(e.doc_id ?? "")}`, e.doc_title || e.doc_id || "知识文档", e.doc_title || e.doc_id || "知识文档")} className="block w-full rounded-xl px-3 py-2 text-left transition hover:bg-[#192837]/[0.06]" type="button">
-                  <span className="block truncate text-sm font-semibold text-[#192837]">{e.doc_title || e.doc_id}</span>
-                  <span className="block truncate text-xs text-[#192837]/55">{e.content}</span>
-                </button>
-              ))}
+              <KnowledgeResults results={docHits} onOpen={(e) => { void openDetail(`/api/knowledge/documents/${encodeURIComponent(e.doc_id ?? "")}`, e.doc_title || e.doc_id || "知识文档", e.doc_title || e.doc_id || "知识文档"); }} />
             </div>
           ) : null}
         </div>
