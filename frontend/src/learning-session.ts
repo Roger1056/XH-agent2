@@ -123,6 +123,46 @@ function getLearnerId() {
   return learnerId;
 }
 
+export type ScaffoldResponse = {
+  mode: "scaffold" | "direct";
+  tier: number;
+  content: string;
+  knowledge_point: string;
+  revealed_answer: boolean;
+  kb_source: string | null;
+};
+
+export async function requestScaffold(
+  question: string,
+  currentTier = 0,
+  studentAnswer = "",
+  skillGaps?: Array<{ topic?: string; current_level?: number; target_level?: number; priority?: string }>,
+): Promise<ScaffoldResponse> {
+  const controller = new AbortController();
+  const timeout = window.setTimeout(() => controller.abort(), 30000);
+  try {
+    const response = await fetch(getApiBase() + "/api/exams/scaffold", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      signal: controller.signal,
+      body: JSON.stringify({ learner_id: getLearnerId(), question, current_tier: currentTier, student_answer: studentAnswer, skill_gaps: skillGaps }),
+    });
+    const payload = restoreEscapedApiText(await response.json().catch(() => ({}))) as ScaffoldResponse & { detail?: unknown };
+    if (!response.ok) throw new Error(formatApiError(payload.detail));
+    if (payload.mode === "direct") return payload;
+    if (payload.mode !== "scaffold" || ![1, 2, 3].includes(payload.tier)
+      || payload.tier <= currentTier || typeof payload.content !== "string" || !payload.content.trim()
+      || payload.revealed_answer !== (payload.tier === 3)
+      || typeof payload.knowledge_point !== "string"
+      || (payload.kb_source != null && typeof payload.kb_source !== "string")) {
+      throw new Error("提示服务返回的数据不完整，请重试。");
+    }
+    return payload;
+  } finally {
+    window.clearTimeout(timeout);
+  }
+}
+
 export async function submitQuiz(
   quiz: Quiz,
   answers: Record<string, string>,

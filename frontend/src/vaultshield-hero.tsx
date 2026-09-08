@@ -1,3 +1,6 @@
+import { KnowledgeRadarChart, DifficultyMatchCurve, type ResourceMatchPoint } from "./learning-charts";
+import { PlannedLearningPath, type LearningPath } from "./learning-path";
+import { ScaffoldPanel } from "./scaffold-panel";
 import { AnimatePresence, motion, useMotionValue, useReducedMotion, useSpring, useTransform } from "framer-motion";
 import { ArrowDown, ArrowRight, ArrowRightCircle, ArrowUp, BrainCircuit, Download, Maximize2, Menu, Minimize2, Search, ShieldCheck, Sparkles, X } from "lucide-react";
 import { useEffect, useRef, useState, type FormEvent, type MouseEvent, type ReactNode } from "react";
@@ -163,16 +166,8 @@ type GenerationErrorItem = {
   raw_error?: string;
 };
 
-type ResourceMatchPoint = {
-  resource_type?: string;
-  title?: string;
-  learner_difficulty?: string;
-  resource_difficulty?: string;
-  difficulty_match?: number;
-  matched?: boolean;
-};
-
 type GenerationResult = {
+  learning_path?: LearningPath | null;
   task_id?: string;
   status?: string;
   diagnosis?: { summary?: string; learning_style?: string; recommended_difficulty?: string; skill_gaps?: SkillGap[] };
@@ -496,7 +491,8 @@ function SkillGapCards({ gaps, dark }: { gaps: SkillGap[]; dark?: boolean }) {
   );
 }
 
-function LearningPathMap({ groups }: { groups: Array<{ domain: KnowledgeDomain; points: KnowledgePointView[] }> }) {
+function LearningPathMap({ groups, path, resources, onSelectResource }: { resources?: GeneratedResource[]; onSelectResource?: (type: string) => void; path?: LearningPath | null; groups: Array<{ domain: KnowledgeDomain; points: KnowledgePointView[] }> }) {
+  if (path) return <PlannedLearningPath path={path} resources={resources} onSelectResource={onSelectResource} />;
   if (!groups.length) return null;
   const total = groups.reduce((sum, group) => sum + group.points.length, 0);
   return (
@@ -557,123 +553,6 @@ function LearningPathMap({ groups }: { groups: Array<{ domain: KnowledgeDomain; 
             </div>
           </div>
         ))}
-      </div>
-    </div>
-  );
-}
-
-function KnowledgeRadarChart({ data }: { data: Record<string, number> }) {
-  const entries = Object.entries(data ?? {}).filter(([, value]) => typeof value === "number");
-  if (entries.length < 3) {
-    if (!entries.length) {
-      return <p className="text-sm text-white/55">暂无知识掌握度数据</p>;
-    }
-    return (
-      <ul className="grid gap-3">
-        {entries.map(([topic, level]) => (
-          <li key={topic}>
-            <div className="flex items-center justify-between text-xs text-white/60">
-              <span className="truncate">{topic}</span>
-              <span className="ml-3 shrink-0">{pct(level)}</span>
-            </div>
-            <div className="mt-1.5 h-1.5 rounded-full bg-white/10">
-              <div className="h-full rounded-full bg-[#7342E2]" style={{ width: pct(level) }} />
-            </div>
-          </li>
-        ))}
-      </ul>
-    );
-  }
-
-  const size = 280;
-  const cx = size / 2;
-  const cy = size / 2;
-  const radius = 96;
-  const count = entries.length;
-  const angleAt = (index: number) => (Math.PI * 2 * index) / count - Math.PI / 2;
-  const pointAt = (index: number, r: number): [number, number] => [cx + r * Math.cos(angleAt(index)), cy + r * Math.sin(angleAt(index))];
-  const polygonPoints = (scale: number) => entries.map((_, index) => pointAt(index, radius * scale).map((n) => n.toFixed(1)).join(",")).join(" ");
-  const dataPoints = entries.map(([, level], index) => pointAt(index, radius * Math.max(0, Math.min(1, level))).map((n) => n.toFixed(1)).join(",")).join(" ");
-
-  return (
-    <div className="flex h-full flex-col items-center justify-center">
-      <svg viewBox={`0 0 ${size} ${size}`} className="w-full max-w-[300px]" role="img" aria-label="知识掌握度雷达图">
-        {[0.25, 0.5, 0.75, 1].map((scale, gi, grid) => (
-          <polygon key={`grid-${gi}`} points={polygonPoints(scale)} fill={gi === grid.length - 1 ? "rgba(255,255,255,0.04)" : "none"} stroke="rgba(255,255,255,0.16)" strokeWidth={1} />
-        ))}
-        {entries.map((_, index) => {
-          const [x, y] = pointAt(index, radius);
-          return <line key={`axis-${index}`} x1={cx} y1={cy} x2={x} y2={y} stroke="rgba(255,255,255,0.16)" strokeWidth={1} />;
-        })}
-        <polygon points={dataPoints} fill="rgba(115,66,226,0.30)" stroke="#7342E2" strokeWidth={2} strokeLinejoin="round" />
-        {entries.map(([topic, level], index) => {
-          const [x, y] = pointAt(index, radius * Math.max(0, Math.min(1, level)));
-          return <circle key={`point-${index}`} cx={x} cy={y} r={3.5} fill="#B99DFF" stroke="#7342E2" strokeWidth={1.5} />;
-        })}
-        {entries.map(([topic], index) => {
-          const [x, y] = pointAt(index, radius + 26);
-          return <text key={`label-${index}`} x={x} y={y} textAnchor="middle" dominantBaseline="middle" fill="rgba(255,255,255,0.78)" fontSize={11}>{topic}</text>;
-        })}
-      </svg>
-    </div>
-  );
-}
-
-function DifficultyMatchCurve({ data }: { data: ResourceMatchPoint[] }) {
-  const points = data ?? [];
-  if (!points.length) {
-    return <p className="text-sm text-white/55">暂无资源难度信息</p>;
-  }
-  const learnerLevel = points[0]?.learner_difficulty ?? "beginner";
-  const learnerRank = difficultyRank(learnerLevel);
-
-  const width = 300;
-  const height = 156;
-  const pad = { top: 30, right: 14, bottom: 34, left: 14 };
-  const plotW = width - pad.left - pad.right;
-  const plotH = height - pad.top - pad.bottom;
-  const xAt = (rank: number) => pad.left + (rank / 2) * plotW;
-  const yAt = (index: number) => pad.top + plotH - (points.length <= 1 ? plotH / 2 : (index / (points.length - 1)) * plotH);
-  const learnerLabelX = Math.min(Math.max(xAt(learnerRank), pad.left + 42), pad.left + plotW - 42);
-
-  const matchColor = (item: ResourceMatchPoint) => {
-    if (item.matched) return "#34D399";
-    return (item.difficulty_match ?? 1) >= 0.5 ? "#FBBF24" : "#F87171";
-  };
-
-  const polylinePoints = points.map((item, index) => `${xAt(difficultyRank(item.resource_difficulty)).toFixed(1)},${yAt(index).toFixed(1)}`).join(" ");
-
-  return (
-    <div className="flex h-full flex-col justify-center">
-      <svg viewBox={`0 0 ${width} ${height}`} className="w-full" role="img" aria-label="资源难度匹配曲线">
-        <line x1={pad.left} y1={pad.top + plotH} x2={pad.left + plotW} y2={pad.top + plotH} stroke="rgba(255,255,255,0.18)" strokeWidth={1} />
-        {DIFFICULTY_ORDER.map((level, index) => {
-          const x = xAt(index);
-          return (
-            <g key={level}>
-              <line x1={x} y1={pad.top + plotH - 4} x2={x} y2={pad.top + plotH + 4} stroke="rgba(255,255,255,0.22)" strokeWidth={1} />
-              <text x={x} y={pad.top + plotH + 17} textAnchor="middle" fill="rgba(255,255,255,0.62)" fontSize={10}>{difficultyLabel(level)}</text>
-            </g>
-          );
-        })}
-        <line x1={xAt(learnerRank)} y1={pad.top} x2={xAt(learnerRank)} y2={pad.top + plotH} stroke="#B99DFF" strokeWidth={1.5} strokeDasharray="4 4" />
-        <text x={learnerLabelX} y={pad.top - 10} textAnchor="middle" fill="#B99DFF" fontSize={10}>学习者推荐·{difficultyLabel(learnerLevel)}</text>
-        <polyline points={polylinePoints} fill="none" stroke="rgba(255,255,255,0.28)" strokeWidth={1.5} strokeLinejoin="round" />
-        {points.map((item, index) => {
-          const x = xAt(difficultyRank(item.resource_difficulty));
-          const y = yAt(index);
-          return (
-            <g key={`${item.resource_type}-${index}`}>
-              <circle cx={x} cy={y} r={4.5} fill={matchColor(item)} stroke="rgba(0,0,0,0.25)" strokeWidth={1} />
-              <text x={x} y={y - 9} textAnchor="middle" fill="rgba(255,255,255,0.7)" fontSize={9}>{resourceLabel(item.resource_type ?? "")}</text>
-            </g>
-          );
-        })}
-      </svg>
-      <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-[11px] text-white/55">
-        <span className="inline-flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-[#34D399]" />匹配</span>
-        <span className="inline-flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-[#FBBF24]" />差 1 档</span>
-        <span className="inline-flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-[#F87171]" />差 2 档</span>
       </div>
     </div>
   );
@@ -1692,7 +1571,8 @@ function LegacyLearningTools({ resource, topic, onApplyRevision }: { resource: G
   );
 }
 
-function LearningTools({ resource, topic, onApplyRevision, onResolveQuiz, onGenerateAdaptiveQuiz, quizAttempt, onQuizAttemptChange }: {
+function LearningTools({ resource, topic, onApplyRevision, onResolveQuiz, onGenerateAdaptiveQuiz, quizAttempt, onQuizAttemptChange, skillGaps }: {
+  skillGaps?: SkillGap[];
   resource: GeneratedResource;
   topic: string;
   onApplyRevision: (resourceType: string, response: LearnerQuestionResponse) => void;
@@ -1701,11 +1581,6 @@ function LearningTools({ resource, topic, onApplyRevision, onResolveQuiz, onGene
   quizAttempt?: QuizAttempt;
   onQuizAttemptChange: (resource: GeneratedResource, update: (current: QuizAttempt) => QuizAttempt) => void;
 }) {
-  const [question, setQuestion] = useState("");
-  const [answer, setAnswer] = useState<LearnerQuestionResponse | null>(null);
-  const [asking, setAsking] = useState(false);
-  const [questionError, setQuestionError] = useState<string | null>(null);
-  const [revisionApplied, setRevisionApplied] = useState(false);
   const [submittingQuiz, setSubmittingQuiz] = useState(false);
   const [generatingAdaptiveQuiz, setGeneratingAdaptiveQuiz] = useState(false);
   const attempt = quizAttempt ?? createQuizAttempt();
@@ -1737,24 +1612,6 @@ function LearningTools({ resource, topic, onApplyRevision, onResolveQuiz, onGene
   const quizHasAnswerKey = Boolean(quiz?.questions.length && quiz.questions.every((item) => item.answer.trim() && item.explanation.trim()));
   const quizSupplements = quiz ? getResourceSupplements(resource) : [];
   const detailByQuestion = new Map(quizResult?.details.map((detail) => [detail.question_id, detail]));
-
-  const submitQuestion = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const trimmedQuestion = question.trim();
-    if (!trimmedQuestion) return;
-
-    setAsking(true);
-    setQuestionError(null);
-    try {
-      setAnswer(await askStudyQuestion(trimmedQuestion, topic, resource.content ?? ""));
-      setRevisionApplied(false);
-    } catch (error) {
-      setAnswer(null);
-      setQuestionError(error instanceof Error ? error.message : "暂时无法获取回答，请确认本地 API 已启动后重试。");
-    } finally {
-      setAsking(false);
-    }
-  };
 
   const submitQuizAnswers = async () => {
     if (!quiz || !allQuestionsAnswered) return;
@@ -1805,21 +1662,7 @@ function LearningTools({ resource, topic, onApplyRevision, onResolveQuiz, onGene
 
   return (
     <section className="mt-8 grid gap-5 border-t border-white/10 pt-7">
-      <div className="rounded-2xl bg-white/[0.07] p-5">
-        <p className="text-xs font-semibold tracking-[0.12em] text-white/55">学习中遇到疑问？</p>
-        <h5 className="mt-2 text-lg font-semibold text-white">提出问题，获得直接解答</h5>
-        <form className="mt-4 grid gap-3" onSubmit={submitQuestion}>
-          <textarea className="min-h-24 resize-y rounded-xl bg-black/20 px-4 py-3 text-sm leading-6 text-white outline-none ring-[#B99DFF] placeholder:text-white/45 focus:ring-2" onChange={(event) => setQuestion(event.target.value)} placeholder="例如：什么是手动限速模式？出现送丝异常时应检查哪些地方？" value={question} />
-          <button className="flex items-center justify-between rounded-full bg-white px-5 py-3 text-sm font-semibold text-[#192837] transition hover:brightness-95 disabled:cursor-wait disabled:opacity-60" disabled={asking} type="submit">{asking ? "正在获取回答..." : "获取学习建议"}<Sparkles size={17} strokeWidth={1.8} /></button>
-        </form>
-        {questionError ? <p className="mt-3 rounded-xl bg-red-400/15 px-4 py-3 text-sm leading-6 text-red-100">{questionError}</p> : null}
-        {answer ? <motion.div className="mt-5 rounded-xl bg-[#0B1D2A] p-4 text-sm leading-7 text-white/85" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
-          <p className="font-semibold text-white">针对你的问题</p>
-          <p className="mt-2 whitespace-pre-wrap">{answer.answer}</p>
-          {answer.suggestions.length ? <ul className="mt-4 grid gap-2 border-t border-white/10 pt-4 text-white/75">{answer.suggestions.map((suggestion) => <li key={suggestion}>- {suggestion}</li>)}</ul> : null}
-          <button className="mt-4 rounded-full bg-[#7342E2] px-4 py-2 text-xs font-semibold text-white transition hover:brightness-110 disabled:opacity-60" disabled={revisionApplied} onClick={() => { onApplyRevision(resource.resource_type, answer); setRevisionApplied(true); }} type="button">{revisionApplied ? "补充已加入当前资源" : "将补充内容加入当前资源"}</button>
-        </motion.div> : null}
-      </div>
+      <ScaffoldPanel key={resource.resource_id ?? resource.resource_type} topic={topic} context={resource.content ?? ""} skillGaps={skillGaps} onApplyRevision={(response) => onApplyRevision(resource.resource_type, response)} />
       {quizNeedsReview && quiz ? <section className="rounded-2xl border border-amber-300/30 bg-amber-300/10 p-5 text-amber-50">
         <p className="text-xs font-semibold tracking-[0.12em] text-amber-100/70">题目修复中</p>
         <h5 className="mt-2 text-lg font-semibold">可评分题目已可作答</h5>
@@ -2036,6 +1879,7 @@ function ExpandedWorkspaceLayout({
         {generationResult?.diagnosis?.summary ? <p className="mt-5 max-w-[78ch] text-base leading-8 text-white/80">诊断：{generationResult.diagnosis.summary}</p> : null}
 
         <VisualizationOverview result={generationResult} />
+        {generationResult?.learning_path && <PlannedLearningPath path={generationResult.learning_path} resources={generationResult.resources} onSelectResource={setSelectedResource} />}
 
         {resource ? <motion.article className="mt-7 rounded-2xl bg-[#102333] p-6 shadow-inner shadow-black/10 sm:p-8 lg:p-10" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} key={selectedResource}>
           <header className="flex flex-wrap items-start justify-between gap-4"><div><p className="text-xs font-semibold text-white/55">{isQuizResource(resource) ? `\u7b2c ${quizRoundNumber(resources, resource)} \u8f6e\u6d4b\u8bd5` : "资源预览"}</p><h4 className="mt-2 text-2xl font-semibold leading-tight text-white">{resource.title}</h4></div>{resource.estimated_duration_minutes ? <span className="rounded-full bg-white/10 px-3 py-2 text-xs font-semibold text-white/75">预计 {resource.estimated_duration_minutes} 分钟</span> : null}</header>
@@ -2058,6 +1902,7 @@ function ExpandedWorkspaceLayout({
                   </div>
                 )}
           <LearningTools
+            skillGaps={generationResult?.diagnosis?.skill_gaps}
             onApplyRevision={onApplyRevision}
             onGenerateAdaptiveQuiz={onGenerateAdaptiveQuiz}
             onQuizAttemptChange={onQuizAttemptChange}
@@ -2075,6 +1920,7 @@ function ExpandedWorkspaceLayout({
               {roundResource.key_takeaways?.length ? <aside className="mt-6 rounded-xl bg-white/[0.07] p-5"><p className="text-xs font-semibold text-white/60">学习重点</p><ul className="mt-3 grid gap-2 pl-5 text-sm leading-7 text-white/85 marker:text-[#B99DFF]">{roundResource.key_takeaways.map((item, index) => <li key={`${item}-${index}`}>{item}</li>)}</ul></aside> : null}
               <div className="mt-6 rounded-xl bg-white/[0.06] p-5 text-sm leading-7 text-white/75"><p className="font-semibold text-white">答题说明</p><p className="mt-2">请完成每一道题后提交。提交前不会显示标准答案或解析。</p></div>
               <LearningTools
+            skillGaps={generationResult?.diagnosis?.skill_gaps}
                 onApplyRevision={onApplyRevision}
                 onGenerateAdaptiveQuiz={onGenerateAdaptiveQuiz}
                 onQuizAttemptChange={onQuizAttemptChange}
@@ -2938,6 +2784,7 @@ export function VaultShieldHero({ variant }: { variant: Variant }) {
                     </div>
                     {generationResult.diagnosis?.summary ? <p className="mt-4 max-w-[76ch] text-[0.96rem] leading-7 text-white/85">诊断：{generationResult.diagnosis.summary}</p> : null}
                     <VisualizationOverview result={generationResult} />
+        {generationResult?.learning_path && <PlannedLearningPath path={generationResult.learning_path} resources={generationResult.resources} onSelectResource={setSelectedResource} />}
                     <div className="mt-6 flex flex-wrap gap-2" aria-label="资源类型">
                       {workspaceResourceItems(generationResult.resources ?? []).map((resource) => (
                         <button aria-pressed={selectedResource === resource.resource_type} className={`rounded-full px-4 py-2.5 text-sm font-semibold transition ${selectedResource === resource.resource_type ? "bg-white text-[#192837]" : "bg-white/15 text-white hover:bg-white/25"}`} key={resource.resource_type} onClick={() => setSelectedResource(resource.resource_type)} type="button">
@@ -2990,6 +2837,7 @@ export function VaultShieldHero({ variant }: { variant: Variant }) {
                 </div>
               )}
                         <LearningTools
+            skillGaps={generationResult?.diagnosis?.skill_gaps}
                           onApplyRevision={applyRevision}
                           onGenerateAdaptiveQuiz={generateAdaptiveQuiz}
                           onQuizAttemptChange={updateQuizAttempt}
@@ -3007,6 +2855,7 @@ export function VaultShieldHero({ variant }: { variant: Variant }) {
                             {roundResource.key_takeaways?.length ? <aside className="mt-5 rounded-xl bg-white/[0.07] p-4"><p className="text-xs font-semibold text-white/60">学习重点</p><ul className="mt-3 grid gap-2 pl-5 text-sm leading-6 text-white/85 marker:text-[#B99DFF]">{roundResource.key_takeaways.map((takeaway, index) => <li key={`${takeaway}-${index}`}>{takeaway}</li>)}</ul></aside> : null}
                             <div className="mt-5 rounded-xl bg-white/[0.06] p-5 text-sm leading-7 text-white/75"><p className="font-semibold text-white">答题说明</p><p className="mt-2">请完成每一道题后提交。提交前不会显示标准答案或解析。</p></div>
                             <LearningTools
+            skillGaps={generationResult?.diagnosis?.skill_gaps}
                               onApplyRevision={applyRevision}
                               onGenerateAdaptiveQuiz={generateAdaptiveQuiz}
                               onQuizAttemptChange={updateQuizAttempt}
@@ -3059,7 +2908,7 @@ export function VaultShieldHero({ variant }: { variant: Variant }) {
                       <button aria-label="关闭详情" className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[#192837]/[0.08] transition-transform hover:scale-105" onClick={() => setWorkspaceDialog(null)} type="button"><X size={19} strokeWidth={1.8} /></button>
                     </div>
                     <div className="mt-6 rounded-2xl bg-[#192837] p-5 text-white sm:p-6">
-                      {workspaceDialog.kind === "workflow" && workspaceDialog.index === 0 ? <><p className="text-sm font-semibold text-white/60">学习画像诊断</p><p className="mt-3 text-sm leading-7 text-white/85">{generationResult?.diagnosis?.summary || "生成资源后将展示学习目标、基础能力和知识缺口诊断。"}</p>{generationResult?.diagnosis?.skill_gaps?.length ? <div className="mt-5"><SkillGapCards gaps={generationResult.diagnosis.skill_gaps} dark /></div> : null}<LearningPathMap groups={buildLearningPath(coreMap, generationResult?.diagnosis?.skill_gaps)} /></> : null}
+                      {workspaceDialog.kind === "workflow" && workspaceDialog.index === 0 ? <><p className="text-sm font-semibold text-white/60">学习画像诊断</p><p className="mt-3 text-sm leading-7 text-white/85">{generationResult?.diagnosis?.summary || "生成资源后将展示学习目标、基础能力和知识缺口诊断。"}</p>{generationResult?.diagnosis?.skill_gaps?.length ? <div className="mt-5"><SkillGapCards gaps={generationResult.diagnosis.skill_gaps} dark /></div> : null}<LearningPathMap resources={generationResult?.resources} onSelectResource={(type) => { setSelectedResource(type); setWorkspaceDialog(null); }} path={generationResult?.learning_path} groups={buildLearningPath(coreMap, generationResult?.diagnosis?.skill_gaps)} /></> : null}
                       {workspaceDialog.kind === "workflow" && workspaceDialog.index === 1 ? <><p className="text-sm font-semibold text-white/60">RAG 知识生成</p><p className="mt-3 text-sm leading-7 text-white/85">根据学习画像检索知识库，生成与当前目标匹配的学习资源。本次已生成 {generationResult?.resources?.length ?? 0} 类资源。</p><div className="mt-5 grid gap-2 sm:grid-cols-3">{(generationResult?.resources ?? []).map((item) => <div className="rounded-xl bg-white/[0.08] px-4 py-3 text-sm text-white/85" key={item.resource_type}>{resourceLabel(item.resource_type)}<span className="mt-1 block text-xs text-white/55">{item.difficulty_level || "待评估难度"}</span></div>)}</div></> : null}
                       {workspaceDialog.kind === "workflow" && workspaceDialog.index === 2 ? <><p className="text-sm font-semibold text-white/60">内容审核与保真修正</p><p className="mt-3 text-sm leading-7 text-white/85">逐项检查资源的知识依据、难度匹配和表达质量，并保留需要修正的具体问题。</p><ul className="mt-5 grid gap-2 text-sm text-white/80">{(generationResult?.audit ?? []).map((item, index) => <li className="flex items-center justify-between gap-4 rounded-xl bg-white/[0.08] px-4 py-3" key={`dialog-audit-${index}`}><span>{resourceLabel(item.resource_type || "资源")}</span><span className="text-white/60">{auditVerdictLabel(item.verdict)}</span></li>)}</ul></> : null}
                       {workspaceDialog.kind === "quality" && workspaceDialog.id === "evidence" ? <><p className="text-sm font-semibold text-white/60">依据校验</p><p className="mt-3 text-sm leading-7 text-white/85">检查生成内容是否有知识库依据，并显示每种资源对应的审核结论。</p><ul className="mt-5 grid gap-2 text-sm text-white/80">{(generationResult?.audit ?? []).map((item, index) => <li className="rounded-xl bg-white/[0.08] px-4 py-3" key={`dialog-evidence-${index}`}><span>{resourceLabel(item.resource_type || "资源")}</span><span className="ml-3 text-white/60">{auditVerdictLabel(item.verdict)}</span>{item.issues?.[0]?.detail ? <span className="mt-1 block text-xs text-white/55">{item.issues[0].detail}</span> : null}</li>)}</ul></> : null}

@@ -15,7 +15,7 @@ button, a { font: inherit; }
 button:focus-visible, a:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 3px; }
 .workspace-expanded-content ~ section,
 .workspace-expanded-content ~ div { display: none; }
-.workspace-expanded-content main > section { display: none; }
+.workspace-expanded-content main > section:not(.learning-path) { display: none; }
 .workspace-expanded-content main > article {
   min-width: 0;
   width: 100%;
