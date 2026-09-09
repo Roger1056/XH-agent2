@@ -5,8 +5,8 @@
   --font-heading: 'Helvetica Now Display Bold', sans-serif;
   --font-body: 'Inter', sans-serif;
   --color-text: #192837;
-  --color-accent: #7342E2;
-  --color-login-bg: #F2F2EE;
+  --color-accent: #1E6E64;
+  --color-login-bg: #04141c;
 }
 
 html { background: var(--color-login-bg); }
@@ -54,3 +54,84 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--color-accent); 
   }
 }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; } }
+
+/* ═══════════════════════════════════════════════════════════
+   沉浸式动态背景（全屏视频 + 深青黑渐变兜底 + 深色遮罩）
+   固定铺满全屏、pointer-events:none 不挡任何交互
+   ═══════════════════════════════════════════════════════════ */
+.immersive-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.immersive-bg-fallback {
+  position: absolute;
+  inset: 0;
+  /* 深青黑渐变：视频未加载 / 加载失败时自动兜底显示 */
+  background: linear-gradient(160deg, #062f2e 0%, #041a24 45%, #01090f 100%);
+}
+.immersive-bg-video {
+  position: absolute;
+  inset: -16px;
+  width: calc(100% + 32px);
+  height: calc(100% + 32px);
+  object-fit: cover;
+}
+.immersive-bg-overlay {
+  position: absolute;
+  inset: 0;
+  /* 硬约束 #2：不压暗背景，完整保留水下青绿画面亮度 */
+  background: transparent;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   玻璃拟态卡片（仅背景/模糊/边框，不改位置与尺寸）
+   ═══════════════════════════════════════════════════════════ */
+.glass {
+  background: rgba(0, 0, 0, 0.38);
+  -webkit-backdrop-filter: blur(12px) saturate(140%);
+  backdrop-filter: blur(12px) saturate(140%);
+  border: 1px solid rgba(200, 255, 230, 0.22);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
+  color: rgba(235, 255, 248, 0.92);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   深色玻璃面板（弹窗 / 抽屉）：近实色深蓝黑 + 强模糊，
+   用于叠加在视频背景上的功能界面，保证文字清晰可读。
+   ═══════════════════════════════════════════════════════════ */
+.glass-panel {
+  background: rgba(0, 0, 0, 0.38);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  backdrop-filter: blur(14px) saturate(140%);
+  border: 1px solid rgba(200, 255, 230, 0.22);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
+  color: rgba(235, 255, 248, 0.92);
+  color-scheme: dark;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   输入框 / 占位符 / 标题 —— 青绿玻璃主题（不改位置与尺寸）
+   ═══════════════════════════════════════════════════════════ */
+.glass-panel input:not([type="radio"]):not([type="range"]):not([type="checkbox"]),
+.glass-panel textarea,
+.glass-panel select,
+.glass input:not([type="radio"]):not([type="range"]):not([type="checkbox"]),
+.glass textarea,
+.glass select {
+  background-color: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(200, 255, 230, 0.18);
+  color: rgba(235, 255, 248, 0.9);
+}
+.glass-panel input::placeholder,
+.glass-panel textarea::placeholder,
+.glass input::placeholder,
+.glass textarea::placeholder {
+  color: rgba(170, 210, 200, 0.6);
+}
+.glass h1, .glass h2, .glass-panel h2, .glass-panel h3 {
+  color: rgba(240, 255, 250, 0.95);
+  text-shadow: 0 0 12px rgba(120, 255, 220, 0.2);
+}

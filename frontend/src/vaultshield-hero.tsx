@@ -361,7 +361,7 @@ function GenerationFailures({ errors, onRegenerate }: { errors: GenerationErrorI
             ) : null}
             <div className="mt-3 flex gap-2">
               <button className="rounded-full bg-white/10 px-3 py-1.5 text-xs font-semibold transition hover:bg-white/20" onClick={() => setAcknowledged((current) => ({ ...current, [index]: true }))} type="button">{"\u77e5\u9053\u4e86"}</button>
-              <button className="rounded-full bg-white px-3 py-1.5 text-xs font-semibold text-[#192837] transition hover:bg-[#B99DFF]" onClick={() => onRegenerate(item)} type="button">{"\u91cd\u65b0\u751f\u6210"}</button>
+              <button className="rounded-full bg-[#1E6E64] px-3 py-1.5 text-xs font-semibold text-white transition hover:brightness-110" onClick={() => onRegenerate(item)} type="button">{"\u91cd\u65b0\u751f\u6210"}</button>
             </div>
           </div>
         );
@@ -468,23 +468,23 @@ function SkillGapCards({ gaps, dark }: { gaps: SkillGap[]; dark?: boolean }) {
         const badge = priorityBadge(gap.priority);
         const hasLevels = typeof gap.current_level === "number" || typeof gap.target_level === "number";
         return (
-          <li key={`${gap.topic}-${index}`} className={`rounded-xl px-4 py-3 ${dark ? "bg-white/[0.08]" : "bg-white/70"}`}>
+          <li key={`${gap.topic}-${index}`} className={`rounded-xl px-4 py-3 ${dark ? "bg-white/[0.08]" : "bg-white/[0.08]"}`}>
             <div className="flex flex-wrap items-center justify-between gap-2">
               <span className={`text-sm font-medium ${dark ? "text-white/90" : "text-[#192837]"}`}>{gap.topic || "\u5f85\u8865\u5145\u77e5\u8bc6\u70b9"}</span>
               {gap.priority ? <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${badge.className}`}>{badge.label}</span> : null}
             </div>
             {hasLevels ? (
               <div className="mt-2">
-                <div className={`flex items-center justify-between text-xs ${dark ? "text-white/55" : "text-[#192837]/55"}`}>
+                <div className={`flex items-center justify-between text-xs ${dark ? "text-white/55" : "text-white/55"}`}>
                   <span>{"\u638c\u63e1\u5ea6"} {typeof gap.current_level === "number" ? pct(gap.current_level) : "\u2014"}</span>
                   <span>{"\u76ee\u6807"} {typeof gap.target_level === "number" ? pct(gap.target_level) : "\u2014"}</span>
                 </div>
                 <div className={`mt-1 h-1.5 rounded-full ${dark ? "bg-white/10" : "bg-[#192837]/10"}`}>
-                  <div className="h-full rounded-full bg-[#7342E2]" style={{ width: typeof gap.current_level === "number" ? pct(gap.current_level) : "0%" }} />
+                  <div className="h-full rounded-full bg-[#1E6E64]" style={{ width: typeof gap.current_level === "number" ? pct(gap.current_level) : "0%" }} />
                 </div>
               </div>
             ) : null}
-            {gap.reason ? <p className={`mt-2 text-xs leading-5 ${dark ? "text-white/55" : "text-[#192837]/55"}`}>{gap.reason}</p> : null}
+            {gap.reason ? <p className={`mt-2 text-xs leading-5 ${dark ? "text-white/55" : "text-white/55"}`}>{gap.reason}</p> : null}
           </li>
         );
       })}
@@ -506,7 +506,7 @@ function LearningPathMap({ groups, path, resources, onSelectResource }: { resour
         {groups.map(({ domain, points }) => (
           <div key={domain.id ?? domain.name}>
             <div className="flex items-center gap-2">
-              <span className="rounded-md bg-[#7342E2]/25 px-2 py-0.5 text-xs font-semibold text-[#C7B3F5]">{domain.id}</span>
+              <span className="rounded-md bg-[#1E6E64]/25 px-2 py-0.5 text-xs font-semibold text-[#9BE8D4]">{domain.id}</span>
               <ArrowRight size={13} strokeWidth={2} className="text-white/30" />
               <span className="text-sm font-semibold text-white/85">{domain.name}</span>
               <span className="text-xs text-white/40">{points.length}</span>
@@ -518,10 +518,10 @@ function LearningPathMap({ groups, path, resources, onSelectResource }: { resour
                 return (
                   <div key={point.id ?? `${domain.id}-${index}`}>
                     {index > 0 ? <div className="flex justify-center py-0.5 text-white/25"><ArrowDown size={14} strokeWidth={2} /></div> : null}
-                    <div className={`rounded-lg px-3 py-2 ${isWeak ? "border border-[#7342E2]/40 bg-[#7342E2]/10" : "bg-white/[0.05]"}`}>
+                    <div className={`rounded-lg px-3 py-2 ${isWeak ? "border border-[#4FD6B4]/40 bg-[#1E6E64]/10" : "bg-white/[0.05]"}`}>
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex items-start gap-1.5">
-                        <span className={`mt-0.5 shrink-0 rounded px-1.5 py-0.5 text-[11px] font-semibold ${levelWeight[point.level ?? ""] === 0 ? "bg-[#7342E2]/30 text-[#C7B3F5]" : levelWeight[point.level ?? ""] === 1 ? "bg-sky-400/20 text-sky-200" : "bg-white/10 text-white/60"}`}>{levelLabel(point.level)}</span>
+                        <span className={`mt-0.5 shrink-0 rounded px-1.5 py-0.5 text-[11px] font-semibold ${levelWeight[point.level ?? ""] === 0 ? "bg-[#1E6E64]/30 text-[#9BE8D4]" : levelWeight[point.level ?? ""] === 1 ? "bg-sky-400/20 text-sky-200" : "bg-white/10 text-white/60"}`}>{levelLabel(point.level)}</span>
                         <span className="text-sm leading-5 text-white/90">{point.topic || "\u672a\u547d\u540d\u77e5\u8bc6\u70b9"}</span>
                       </div>
                       {isWeak && point.priority ? <span className={`shrink-0 rounded-full px-2 py-0.5 text-xs font-semibold ${badge.className}`}>{badge.label}</span> : null}
@@ -533,7 +533,7 @@ function LearningPathMap({ groups, path, resources, onSelectResource }: { resour
                           <span>{"\u76ee\u6807"} {typeof point.target === "number" ? pct(point.target) : "\u2014"}</span>
                         </div>
                         <div className="mt-1 h-1.5 rounded-full bg-white/10">
-                          <div className="h-full rounded-full bg-[#7342E2]" style={{ width: typeof point.mastery === "number" ? pct(point.mastery) : "0%" }} />
+                          <div className="h-full rounded-full bg-[#1E6E64]" style={{ width: typeof point.mastery === "number" ? pct(point.mastery) : "0%" }} />
                         </div>
                         {point.reason ? <p className="mt-1.5 text-xs leading-5 text-white/55">{point.reason}</p> : null}
                       </div>
@@ -1081,15 +1081,15 @@ function DocumentDetailModal({ detail, onClose }: { detail: DocumentDetail | nul
   return (
     <div className="fixed inset-0 z-[80] flex items-center justify-center p-4 sm:p-8">
       <button aria-label={"关闭详情"} className="absolute inset-0 bg-[#192837]/40 backdrop-blur-[4px]" onClick={onClose} type="button" />
-      <div className="relative flex max-h-[85dvh] w-full max-w-[720px] flex-col overflow-hidden rounded-[1.75rem] bg-[#F2F2EE] shadow-[0_28px_100px_rgba(25,40,55,0.34)]">
-        <div className="flex items-start justify-between gap-4 border-b border-[#192837]/10 px-6 py-5 sm:px-8">
+      <div className="relative flex max-h-[85dvh] w-full max-w-[720px] flex-col overflow-hidden rounded-[1.75rem] glass-panel shadow-[0_28px_100px_rgba(25,40,55,0.34)]">
+        <div className="flex items-start justify-between gap-4 border-b border-white/10 px-6 py-5 sm:px-8">
           <div className="min-w-0">
-            <p className="truncate text-xs font-semibold tracking-[0.12em] text-[#192837]/50">{detail.source}</p>
-            <h2 className="mt-1 truncate font-[var(--font-heading)] text-xl leading-tight text-[#192837]">{detail.title}</h2>
+            <p className="truncate text-xs font-semibold tracking-[0.12em] text-white/50">{detail.source}</p>
+            <h2 className="mt-1 truncate font-[var(--font-heading)] text-xl leading-tight text-white">{detail.title}</h2>
           </div>
-          <button aria-label={"关闭"} className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[#192837]/[0.08] transition hover:bg-[#192837]/[0.15]" onClick={onClose} type="button"><X size={20} strokeWidth={1.8} /></button>
+          <button aria-label={"关闭"} className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-white/10 transition hover:bg-white/20" onClick={onClose} type="button"><X size={20} strokeWidth={1.8} /></button>
         </div>
-        <div className="overflow-y-auto px-6 py-5 text-sm leading-7 text-[#192837]/80 [&_h2]:mt-5 [&_h2]:text-xl [&_h2]:font-semibold [&_h2]:text-[#192837] [&_h3]:mt-4 [&_h3]:text-lg [&_h3]:font-semibold [&_h3]:text-[#192837] [&_h4]:mt-3 [&_h4]:font-semibold [&_h4]:text-[#192837] [&_p]:my-2 [&_ul]:my-3 [&_ol]:my-3 [&_li]:my-1 sm:px-8" dangerouslySetInnerHTML={{ __html: renderDocumentMarkdown(detail.content) }} />
+        <div className="overflow-y-auto px-6 py-5 text-sm leading-7 text-white/80 [&_h2]:mt-5 [&_h2]:text-xl [&_h2]:font-semibold [&_h2]:text-white [&_h3]:mt-4 [&_h3]:text-lg [&_h3]:font-semibold [&_h3]:text-white [&_h4]:mt-3 [&_h4]:font-semibold [&_h4]:text-white [&_p]:my-2 [&_ul]:my-3 [&_ol]:my-3 [&_li]:my-1 sm:px-8" dangerouslySetInnerHTML={{ __html: renderDocumentMarkdown(detail.content) }} />
       </div>
     </div>
   );
@@ -1229,31 +1229,31 @@ function GlobalSearch() {
 
   return (
     <div ref={containerRef} className="relative hidden min-w-0 flex-1 max-w-sm lg:block">
-      <div className="flex items-center gap-2 rounded-full bg-[#192837]/[0.06] px-4 py-2">
-        <Search className="h-4 w-4 shrink-0 text-[#192837]/50" />
+      <div className="flex items-center gap-2 rounded-full bg-white/10 px-4 py-2">
+        <Search className="h-4 w-4 shrink-0 text-white/50" />
         <input
-          className="w-full bg-transparent text-sm text-[#192837] outline-none placeholder:text-[#192837]/45"
+          className="w-full bg-transparent text-sm text-white outline-none placeholder:text-white/45"
           onChange={(e) => setQuery(e.target.value)}
           onFocus={() => { if (query.trim()) setOpen(true); }}
           placeholder="全局搜索：报警 / 指令 / 知识文档"
           type="text"
           value={query}
         />
-        {query ? <button className="grid h-5 w-5 place-items-center rounded-full text-[#192837]/45 hover:bg-[#192837]/10" onClick={() => { setQuery(""); setOpen(false); }} type="button"><X size={14} strokeWidth={1.8} /></button> : null}
+        {query ? <button className="grid h-5 w-5 place-items-center rounded-full text-white/45 hover:bg-white/10" onClick={() => { setQuery(""); setOpen(false); }} type="button"><X size={14} strokeWidth={1.8} /></button> : null}
       </div>
       {open && q ? (
-        <div className="absolute left-0 right-0 top-full z-50 mt-2 max-h-[70vh] overflow-y-auto rounded-2xl border border-[#192837]/10 bg-white p-2 shadow-[0_18px_60px_rgba(25,40,55,0.18)]">
-          {searching && !hasResults ? <p className="px-3 py-4 text-center text-sm text-[#192837]/55">{"搜索中…"}</p> : null}
-          {!searching && !hasResults ? <p className="px-3 py-4 text-center text-sm text-[#192837]/55">{"未找到匹配内容"}</p> : null}
+        <div className="absolute left-0 right-0 top-full z-50 mt-2 max-h-[70vh] overflow-y-auto rounded-2xl border border-white/10 bg-[#0B1D2A]/[0.97] p-2 shadow-[0_18px_60px_rgba(25,40,55,0.18)]">
+          {searching && !hasResults ? <p className="px-3 py-4 text-center text-sm text-white/55">{"搜索中…"}</p> : null}
+          {!searching && !hasResults ? <p className="px-3 py-4 text-center text-sm text-white/55">{"未找到匹配内容"}</p> : null}
           {alarmHits.length ? (
             <div className="mt-1">
-              <p className="px-3 py-2 text-xs font-semibold tracking-[0.12em] text-[#192837]/50">{"报警排查"}</p>
+              <p className="px-3 py-2 text-xs font-semibold tracking-[0.12em] text-white/50">{"报警排查"}</p>
               {alarmHits.map((e, i) => (
-                <button key={`alm-${i}`} onClick={() => openDetail(`/api/knowledge/alarms/${e.brand}/${encodeURIComponent(e.alarm_code ?? "")}`, e.alarm_code || e.fault_name || "报警文档", `${e.brand ?? ""} · ${e.alarm_code ?? ""}`)} className="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left transition hover:bg-[#192837]/[0.06]" type="button">
-                  <span className="rounded-full bg-red-400/15 px-2 py-0.5 text-xs font-semibold text-red-600">{e.brand ?? ""}</span>
+                <button key={`alm-${i}`} onClick={() => openDetail(`/api/knowledge/alarms/${e.brand}/${encodeURIComponent(e.alarm_code ?? "")}`, e.alarm_code || e.fault_name || "报警文档", `${e.brand ?? ""} · ${e.alarm_code ?? ""}`)} className="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left transition hover:bg-white/[0.06]" type="button">
+                  <span className="rounded-full bg-red-400/15 px-2 py-0.5 text-xs font-semibold text-red-300">{e.brand ?? ""}</span>
                   <span className="min-w-0">
-                    <span className="block truncate text-sm font-semibold text-[#192837]">{e.alarm_code}</span>
-                    <span className="block truncate text-xs text-[#192837]/55">{e.fault_name || e.symptom || e.doc_title}</span>
+                    <span className="block truncate text-sm font-semibold text-white">{e.alarm_code}</span>
+                    <span className="block truncate text-xs text-white/55">{e.fault_name || e.symptom || e.doc_title}</span>
                   </span>
                 </button>
               ))}
@@ -1261,13 +1261,13 @@ function GlobalSearch() {
           ) : null}
           {instructionHits.length ? (
             <div className="mt-2">
-              <p className="px-3 py-2 text-xs font-semibold tracking-[0.12em] text-[#192837]/50">{"指令速查"}</p>
+              <p className="px-3 py-2 text-xs font-semibold tracking-[0.12em] text-white/50">{"指令速查"}</p>
               {instructionHits.map((e, i) => (
-                <button key={`ins-${i}`} onClick={() => openDetail(`/api/knowledge/instructions/${e.brand}/${encodeURIComponent(e.instruction ?? "")}`, e.instruction || "指令文档", `${e.brand ?? ""} · ${e.instruction ?? ""}`)} className="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left transition hover:bg-[#192837]/[0.06]" type="button">
-                  <span className="rounded-full bg-amber-400/20 px-2 py-0.5 text-xs font-semibold text-amber-700">{e.brand ?? ""}</span>
+                <button key={`ins-${i}`} onClick={() => openDetail(`/api/knowledge/instructions/${e.brand}/${encodeURIComponent(e.instruction ?? "")}`, e.instruction || "指令文档", `${e.brand ?? ""} · ${e.instruction ?? ""}`)} className="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left transition hover:bg-white/[0.06]" type="button">
+                  <span className="rounded-full bg-amber-400/20 px-2 py-0.5 text-xs font-semibold text-amber-300">{e.brand ?? ""}</span>
                   <span className="min-w-0">
-                    <span className="block truncate text-sm font-semibold text-[#192837]">{e.instruction}</span>
-                    <span className="block truncate text-xs text-[#192837]/55">{e.doc_title}</span>
+                    <span className="block truncate text-sm font-semibold text-white">{e.instruction}</span>
+                    <span className="block truncate text-xs text-white/55">{e.doc_title}</span>
                   </span>
                 </button>
               ))}
@@ -1275,7 +1275,7 @@ function GlobalSearch() {
           ) : null}
           {docHits.length ? (
             <div className="mt-2">
-              <p className="px-3 py-2 text-xs font-semibold tracking-[0.12em] text-[#192837]/50">{"知识文档"}</p>
+              <p className="px-3 py-2 text-xs font-semibold tracking-[0.12em] text-white/50">{"知识文档"}</p>
               <KnowledgeResults results={docHits} onOpen={(e) => { void openDetail(`/api/knowledge/documents/${encodeURIComponent(e.doc_id ?? "")}`, e.doc_title || e.doc_id || "知识文档", e.doc_title || e.doc_id || "知识文档"); }} />
             </div>
           ) : null}
@@ -1344,7 +1344,7 @@ function ResourceMarkdown({ content }: { content: string }) {
         items.push(item[1]);
         lineIndex += 1;
       }
-      blocks.push(<ul className="my-4 grid gap-2 pl-5 text-[0.96rem] leading-7 text-white/85 marker:text-[#B99DFF]" key={`list-${lineIndex}`}>{items.map((item, index) => <li key={index}>{renderInlineMarkdown(item)}</li>)}</ul>);
+      blocks.push(<ul className="my-4 grid gap-2 pl-5 text-[0.96rem] leading-7 text-white/85 marker:text-[#4FD6B4]" key={`list-${lineIndex}`}>{items.map((item, index) => <li key={index}>{renderInlineMarkdown(item)}</li>)}</ul>);
       continue;
     }
 
@@ -1357,7 +1357,7 @@ function ResourceMarkdown({ content }: { content: string }) {
         items.push(item[1]);
         lineIndex += 1;
       }
-      blocks.push(<ol className="my-4 grid gap-2 pl-5 text-[0.96rem] leading-7 text-white/85 marker:font-semibold marker:text-[#B99DFF]" key={`ordered-${lineIndex}`}>{items.map((item, index) => <li key={index}>{renderInlineMarkdown(item)}</li>)}</ol>);
+      blocks.push(<ol className="my-4 grid gap-2 pl-5 text-[0.96rem] leading-7 text-white/85 marker:font-semibold marker:text-[#4FD6B4]" key={`ordered-${lineIndex}`}>{items.map((item, index) => <li key={index}>{renderInlineMarkdown(item)}</li>)}</ol>);
       continue;
     }
 
@@ -1433,7 +1433,7 @@ function TraceReportPanel({ report }: { report?: GeneratedResource["trace_report
       <div className="mx-auto mt-5 max-w-[76ch] rounded-xl border border-white/10 bg-white/[0.04]">
         <button type="button" onClick={() => setOpen((v) => !v)} className="flex w-full items-center justify-between px-4 py-3 text-left">
           <span className="flex items-center gap-2 text-sm font-semibold text-white/85">
-            <ShieldCheck className="h-4 w-4 text-[#B99DFF]" />
+            <ShieldCheck className="h-4 w-4 text-[#4FD6B4]" />
             {"内容可信度报告"}
           </span>
           <span className="text-xs text-white/50">{open ? "收起" : "展开"}</span>
@@ -1530,14 +1530,14 @@ function LegacyLearningTools({ resource, topic, onApplyRevision }: { resource: G
         <p className="text-xs font-semibold tracking-[0.12em] text-white/55">学习中遇到疑问？</p>
         <h5 className="mt-2 text-lg font-semibold text-white">提出问题，生成针对性补充</h5>
         <form className="mt-4 grid gap-3" onSubmit={submitQuestion}>
-          <textarea className="min-h-24 resize-y rounded-xl bg-black/20 px-4 py-3 text-sm leading-6 text-white outline-none ring-[#B99DFF] placeholder:text-white/45 focus:ring-2" onChange={(event) => setQuestion(event.target.value)} placeholder="例如：工具坐标系和工件坐标系有什么区别？" value={question} />
-          <button className="flex items-center justify-between rounded-full bg-white px-5 py-3 text-sm font-semibold text-[#192837] transition hover:brightness-95 disabled:cursor-wait disabled:opacity-60" disabled={asking} type="submit">{asking ? "正在整理建议..." : "获取学习建议"}<Sparkles size={17} strokeWidth={1.8} /></button>
+          <textarea className="min-h-24 resize-y rounded-xl bg-black/20 px-4 py-3 text-sm leading-6 text-white outline-none ring-[#4FD6B4] placeholder:text-white/45 focus:ring-2" onChange={(event) => setQuestion(event.target.value)} placeholder="例如：工具坐标系和工件坐标系有什么区别？" value={question} />
+          <button className="flex items-center justify-between rounded-full bg-[#1E6E64] px-5 py-3 text-sm font-semibold text-white transition hover:brightness-110 disabled:cursor-wait disabled:opacity-60" disabled={asking} type="submit">{asking ? "正在整理建议..." : "获取学习建议"}<Sparkles size={17} strokeWidth={1.8} /></button>
         </form>
         {questionError ? <p className="mt-3 rounded-xl bg-red-400/15 px-4 py-3 text-sm leading-6 text-red-100">{questionError}</p> : null}
         {answer ? <motion.div className="mt-5 rounded-xl bg-[#0B1D2A] p-4 text-sm leading-7 text-white/85" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
           <p className="font-semibold text-white">针对你的疑问</p><p className="mt-2">{answer.answer}</p>
           <ul className="mt-4 grid gap-2 text-white/75">{answer.suggestions.map((suggestion) => <li key={suggestion}>- {suggestion}</li>)}</ul>
-          <button className="mt-4 rounded-full bg-[#7342E2] px-4 py-2 text-xs font-semibold text-white transition hover:brightness-110" onClick={() => onApplyRevision(resource.resource_type, answer)} type="button">应用这段补充到当前资源</button>
+          <button className="mt-4 rounded-full bg-[#1E6E64] px-4 py-2 text-xs font-semibold text-white transition hover:brightness-110" onClick={() => onApplyRevision(resource.resource_type, answer)} type="button">应用这段补充到当前资源</button>
         </motion.div> : null}
       </div>
       {quiz ? <div
@@ -1550,14 +1550,14 @@ function LegacyLearningTools({ resource, topic, onApplyRevision }: { resource: G
           }
         }}
       >
-        <div className="flex flex-wrap items-center justify-between gap-3"><div><p className="text-xs font-semibold tracking-[0.12em] text-white/55">即时练习</p><h5 className="mt-2 text-lg font-semibold text-white">{quiz.title}</h5></div>{submitted ? <span className="rounded-full bg-[#B99DFF]/20 px-3 py-2 text-xs font-semibold text-[#E5DBFF]">得分 {correctCount}/{quiz.questions.length}</span> : null}</div>
-        <div className="mt-5 grid gap-5">{quiz.questions.map((item, index) => <fieldset className="rounded-xl bg-black/15 p-4" key={item.id}><legend className="px-1 text-sm font-semibold text-white">{index + 1}. {item.stem}</legend><div className="mt-3 grid gap-2">{item.options.map((option) => <label className={`flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2 text-sm transition ${submitted && option.id === item.answer ? "bg-emerald-400/20 text-white" : submitted && answers[item.id] === option.id ? "bg-red-400/20 text-white" : "bg-white/[0.06] text-white/85 hover:bg-white/10"}`} key={option.id}><input checked={answers[item.id] === option.id} className="accent-[#7342E2]" disabled={submitted} name={item.id} onChange={() => setAnswers((current) => ({ ...current, [item.id]: option.id }))} type="radio" /><span><strong>{option.id}.</strong> {option.text}</span></label>)}</div>{submitted ? <p className="mt-3 text-sm leading-6 text-white/75"><span className="font-semibold text-white">解析：</span>{item.explanation}</p> : null}</fieldset>)}</div>
-        {!submitted ? <button className="mt-5 flex w-full items-center justify-between rounded-full bg-[#7342E2] px-5 py-3 text-sm font-semibold text-white transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50" disabled={Object.keys(answers).length !== quiz.questions.length} onClick={() => setSubmitted(true)} type="button">提交并查看解析<ArrowRightCircle size={17} /></button> : <button className="mt-5 rounded-full bg-white/10 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/20" onClick={() => { setAnswers({}); setSubmitted(false); }} type="button">重新作答</button>}
+        <div className="flex flex-wrap items-center justify-between gap-3"><div><p className="text-xs font-semibold tracking-[0.12em] text-white/55">即时练习</p><h5 className="mt-2 text-lg font-semibold text-white">{quiz.title}</h5></div>{submitted ? <span className="rounded-full bg-[#4FD6B4]/20 px-3 py-2 text-xs font-semibold text-[#D3FBE9]">得分 {correctCount}/{quiz.questions.length}</span> : null}</div>
+        <div className="mt-5 grid gap-5">{quiz.questions.map((item, index) => <fieldset className="rounded-xl bg-black/15 p-4" key={item.id}><legend className="px-1 text-sm font-semibold text-white">{index + 1}. {item.stem}</legend><div className="mt-3 grid gap-2">{item.options.map((option) => <label className={`flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2 text-sm transition ${submitted && option.id === item.answer ? "bg-emerald-400/20 text-white" : submitted && answers[item.id] === option.id ? "bg-red-400/20 text-white" : "bg-white/[0.06] text-white/85 hover:bg-white/10"}`} key={option.id}><input checked={answers[item.id] === option.id} className="accent-[#4FD6B4]" disabled={submitted} name={item.id} onChange={() => setAnswers((current) => ({ ...current, [item.id]: option.id }))} type="radio" /><span><strong>{option.id}.</strong> {option.text}</span></label>)}</div>{submitted ? <p className="mt-3 text-sm leading-6 text-white/75"><span className="font-semibold text-white">解析：</span>{item.explanation}</p> : null}</fieldset>)}</div>
+        {!submitted ? <button className="mt-5 flex w-full items-center justify-between rounded-full bg-[#1E6E64] px-5 py-3 text-sm font-semibold text-white transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50" disabled={Object.keys(answers).length !== quiz.questions.length} onClick={() => setSubmitted(true)} type="button">提交并查看解析<ArrowRightCircle size={17} /></button> : <button className="mt-5 rounded-full bg-white/10 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/20" onClick={() => { setAnswers({}); setSubmitted(false); }} type="button">重新作答</button>}
         {quizError ? <p className="mt-4 rounded-xl bg-red-400/15 px-4 py-3 text-sm text-red-100">{quizError}</p> : null}
-        {submitted && quizResult?.learning_advice?.length ? <ul className="mt-4 grid gap-2 rounded-xl bg-[#B99DFF]/10 p-4 text-sm leading-6 text-[#EDE8FF]">{quizResult.learning_advice.map((advice) => <li key={advice}>- {decodeEscapedText(advice)}</li>)}</ul> : null}
+        {submitted && quizResult?.learning_advice?.length ? <ul className="mt-4 grid gap-2 rounded-xl bg-[#4FD6B4]/10 p-4 text-sm leading-6 text-[#E4FBF0]">{quizResult.learning_advice.map((advice) => <li key={advice}>- {decodeEscapedText(advice)}</li>)}</ul> : null}
       </div> : null}
-      {quiz && resource.supplements?.length ? <section className="rounded-2xl border border-[#B99DFF]/30 bg-[#B99DFF]/10 p-5">
-        <p className="text-xs font-semibold tracking-[0.12em] text-[#E5DBFF]">针对疑问的补充资源</p>
+      {quiz && resource.supplements?.length ? <section className="rounded-2xl border border-[#4FD6B4]/30 bg-[#4FD6B4]/10 p-5">
+        <p className="text-xs font-semibold tracking-[0.12em] text-[#D3FBE9]">针对疑问的补充资源</p>
         <div className="mt-4 grid gap-5">{resource.supplements.map((supplement, index) => <article className="rounded-xl bg-[#0B1D2A]/80 p-4" key={`${supplement.title}-${index}`}>
           <h5 className="text-base font-semibold text-white">{supplement.title}</h5>
           <div className="mt-3"><ResourceMarkdown content={supplement.content} /></div>
@@ -1677,7 +1677,7 @@ function LearningTools({ resource, topic, onApplyRevision, onResolveQuiz, onGene
       {quiz ? <div className="rounded-2xl bg-white/[0.07] p-5">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div><p className="text-xs font-semibold tracking-[0.12em] text-white/55">测试题</p><h5 className="mt-2 text-lg font-semibold text-white">{quiz.title}</h5></div>
-          {submitted && quizResult ? <span className="rounded-full bg-[#B99DFF]/20 px-3 py-2 text-xs font-semibold text-[#E5DBFF]">得分 {quizResult.correct_count}/{quizResult.total}</span> : null}
+          {submitted && quizResult ? <span className="rounded-full bg-[#4FD6B4]/20 px-3 py-2 text-xs font-semibold text-[#D3FBE9]">得分 {quizResult.correct_count}/{quizResult.total}</span> : null}
         </div>
         <p className="mt-3 text-sm leading-6 text-white/65">请先完成每一题。提交前不会显示标准答案和解析；选择题请输入选项字母，简答题请直接输入答案。</p>
         <div className="mt-5 grid gap-5">{quiz.questions.map((item, index) => {
@@ -1687,27 +1687,27 @@ function LearningTools({ resource, topic, onApplyRevision, onResolveQuiz, onGene
             <h6 className="text-sm font-semibold leading-6 text-white">{index + 1}. {item.stem}</h6>
             {isChoiceQuestion ? <div className="mt-4 grid gap-2" role="group">{item.options.map((option) => {
               const selected = answers[item.id] === option.id;
-              return <button aria-pressed={selected} className={`flex w-full items-start gap-3 rounded-lg border px-3 py-2.5 text-left text-sm leading-6 transition ${selected ? "border-[#B99DFF] bg-[#7342E2]/30 text-white" : "border-transparent bg-white/[0.06] text-white/80 hover:border-white/25 hover:bg-white/[0.1]"}`} disabled={submitted} key={option.id} onClick={() => setAnswers((current) => ({ ...current, [item.id]: option.id }))} type="button"><span className={`grid h-6 w-6 shrink-0 place-items-center rounded-full text-xs font-semibold ${selected ? "bg-white text-[#7342E2]" : "bg-white/10 text-white/80"}`}>{option.id}</span><span className="pt-0.5">{option.text}</span></button>;
+              return <button aria-pressed={selected} className={`flex w-full items-start gap-3 rounded-lg border px-3 py-2.5 text-left text-sm leading-6 transition ${selected ? "border-[#4FD6B4] bg-[#1E6E64]/30 text-white" : "border-transparent bg-white/[0.06] text-white/80 hover:border-white/25 hover:bg-white/[0.1]"}`} disabled={submitted} key={option.id} onClick={() => setAnswers((current) => ({ ...current, [item.id]: option.id }))} type="button"><span className={`grid h-6 w-6 shrink-0 place-items-center rounded-full text-xs font-semibold ${selected ? "bg-[#1E6E64] text-white" : "bg-white/10 text-white/80"}`}>{option.id}</span><span className="pt-0.5">{option.text}</span></button>;
             })}</div> : null}
             {!isChoiceQuestion ? <>
-            <label className="mt-4 grid gap-2 text-xs font-semibold text-white/65">你的答案<textarea className="min-h-20 resize-y rounded-lg bg-white/[0.08] px-3 py-2 text-sm font-normal leading-6 text-white outline-none ring-[#B99DFF] focus:ring-2 disabled:opacity-70" disabled={submitted} onChange={(event) => setAnswers((current) => ({ ...current, [item.id]: event.target.value }))} placeholder={item.options.length ? "请输入选项字母，例如 B" : "请写下你的答案"} value={answers[item.id] || ""} /></label>
+            <label className="mt-4 grid gap-2 text-xs font-semibold text-white/65">你的答案<textarea className="min-h-20 resize-y rounded-lg bg-white/[0.08] px-3 py-2 text-sm font-normal leading-6 text-white outline-none ring-[#4FD6B4] focus:ring-2 disabled:opacity-70" disabled={submitted} onChange={(event) => setAnswers((current) => ({ ...current, [item.id]: event.target.value }))} placeholder={item.options.length ? "请输入选项字母，例如 B" : "请写下你的答案"} value={answers[item.id] || ""} /></label>
             </> : null}
             {submitted && detail ? <div className={`mt-4 rounded-lg p-3 text-sm leading-6 ${detail.correct ? "bg-emerald-400/15 text-emerald-50" : "bg-red-400/15 text-red-50"}`}><p className="font-semibold">{detail.correct ? "回答正确" : "需要复习"}</p><p className="mt-1">标准答案：{decodeEscapedText(detail.standard_answer)}</p><p className="mt-1">解析：{decodeEscapedText(detail.explanation)}</p></div> : null}
           </article>;
         })}</div>
-        {!submitted ? <button className="mt-5 flex w-full items-center justify-between rounded-full bg-[#7342E2] px-5 py-3 text-sm font-semibold text-white transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50" disabled={!allQuestionsAnswered || submittingQuiz} onClick={() => void submitQuizAnswers()} type="button">{submittingQuiz ? "正在提交评分..." : "提交并查看答案解析"}<ArrowRightCircle size={17} /></button> : <button className="mt-5 rounded-full bg-white/10 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/20" onClick={() => { setAnswers({}); setSubmitted(false); setQuizResult(null); setQuizError(null); }} type="button">重新作答</button>}
+        {!submitted ? <button className="mt-5 flex w-full items-center justify-between rounded-full bg-[#1E6E64] px-5 py-3 text-sm font-semibold text-white transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50" disabled={!allQuestionsAnswered || submittingQuiz} onClick={() => void submitQuizAnswers()} type="button">{submittingQuiz ? "正在提交评分..." : "提交并查看答案解析"}<ArrowRightCircle size={17} /></button> : <button className="mt-5 rounded-full bg-white/10 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/20" onClick={() => { setAnswers({}); setSubmitted(false); setQuizResult(null); setQuizError(null); }} type="button">重新作答</button>}
         {quizError ? <p className="mt-4 rounded-xl bg-red-400/15 px-4 py-3 text-sm text-red-100">{quizError}</p> : null}
-        {submitted && quizResult?.learning_advice?.length ? <ul className="mt-4 grid gap-2 rounded-xl bg-[#B99DFF]/10 p-4 text-sm leading-6 text-[#EDE8FF]">{quizResult.learning_advice.map((advice) => <li key={advice}>- {decodeEscapedText(advice)}</li>)}</ul> : null}
-        {submitted && quizResult ? <section className="mt-5 rounded-xl border border-[#B99DFF]/35 bg-[#B99DFF]/10 p-4">
-          <div className="flex flex-wrap items-start justify-between gap-3"><div><p className="text-xs font-semibold text-[#E5DBFF]">{decodeEscapedText("\u5b66\u4e60\u753b\u50cf\u5df2\u66f4\u65b0")}</p><h6 className="mt-1 text-base font-semibold text-white">{decodeEscapedText("\u672c\u8f6e\u8868\u73b0\u5df2\u7528\u4e8e\u4e0b\u4e00\u8f6e\u51fa\u9898")}</h6></div><span className="rounded-full bg-white/10 px-3 py-1.5 text-xs font-semibold text-white">{quizResult.score}%</span></div>
+        {submitted && quizResult?.learning_advice?.length ? <ul className="mt-4 grid gap-2 rounded-xl bg-[#4FD6B4]/10 p-4 text-sm leading-6 text-[#E4FBF0]">{quizResult.learning_advice.map((advice) => <li key={advice}>- {decodeEscapedText(advice)}</li>)}</ul> : null}
+        {submitted && quizResult ? <section className="mt-5 rounded-xl border border-[#4FD6B4]/35 bg-[#4FD6B4]/10 p-4">
+          <div className="flex flex-wrap items-start justify-between gap-3"><div><p className="text-xs font-semibold text-[#D3FBE9]">{decodeEscapedText("\u5b66\u4e60\u753b\u50cf\u5df2\u66f4\u65b0")}</p><h6 className="mt-1 text-base font-semibold text-white">{decodeEscapedText("\u672c\u8f6e\u8868\u73b0\u5df2\u7528\u4e8e\u4e0b\u4e00\u8f6e\u51fa\u9898")}</h6></div><span className="rounded-full bg-white/10 px-3 py-1.5 text-xs font-semibold text-white">{quizResult.score}%</span></div>
           {quizResult.feedback?.weak_topics?.length ? <p className="mt-3 text-sm leading-6 text-white/80">{decodeEscapedText("\u4f18\u5148\u8865\u5f3a\uff1a")}{quizResult.feedback.weak_topics.map((item) => `${decodeEscapedText(item.topic)} ${Math.round(item.mastery)}%`).join("\u3001")}</p> : null}
           {quizResult.feedback?.strong_topics?.length ? <p className="mt-2 text-sm leading-6 text-white/70">{decodeEscapedText("\u5df2\u638c\u63e1\uff1a")}{quizResult.feedback.strong_topics.map((item) => `${decodeEscapedText(item.topic)} ${Math.round(item.mastery)}%`).join("\u3001")}</p> : null}
           {quizResult.feedback?.recommendations?.length ? <p className="mt-2 text-sm leading-6 text-white/70">{decodeEscapedText(quizResult.feedback.recommendations[0])}</p> : null}
-          <button className="mt-4 flex w-full items-center justify-between rounded-full bg-white px-4 py-3 text-sm font-semibold text-[#192837] transition hover:bg-[#E5DBFF] disabled:cursor-wait disabled:opacity-60" disabled={generatingAdaptiveQuiz} onClick={() => void generateAdaptiveQuiz()} type="button">{generatingAdaptiveQuiz ? "\u6b63\u5728\u6839\u636e\u65b0\u753b\u50cf\u51fa\u9898..." : "\u751f\u6210\u4e0b\u4e00\u8f6e\u9488\u5bf9\u6027\u6d4b\u8bd5"}<ArrowRightCircle size={17} /></button>
+          <button className="mt-4 flex w-full items-center justify-between rounded-full bg-[#1E6E64] px-4 py-3 text-sm font-semibold text-white transition hover:brightness-110 disabled:cursor-wait disabled:opacity-60" disabled={generatingAdaptiveQuiz} onClick={() => void generateAdaptiveQuiz()} type="button">{generatingAdaptiveQuiz ? "\u6b63\u5728\u6839\u636e\u65b0\u753b\u50cf\u51fa\u9898..." : "\u751f\u6210\u4e0b\u4e00\u8f6e\u9488\u5bf9\u6027\u6d4b\u8bd5"}<ArrowRightCircle size={17} /></button>
         </section> : null}
       </div> : null}
-      {quizSupplements.length ? <section className="rounded-2xl border border-[#B99DFF]/30 bg-[#B99DFF]/10 p-5">
-        <p className="text-xs font-semibold tracking-[0.12em] text-[#E5DBFF]">针对疑问的补充资源</p>
+      {quizSupplements.length ? <section className="rounded-2xl border border-[#4FD6B4]/30 bg-[#4FD6B4]/10 p-5">
+        <p className="text-xs font-semibold tracking-[0.12em] text-[#D3FBE9]">针对疑问的补充资源</p>
         <div className="mt-4 grid gap-5">{quizSupplements.map((supplement, index) => <article className="rounded-xl bg-[#0B1D2A]/80 p-4" key={`${supplement.title}-${index}`}>
           <h5 className="text-base font-semibold text-white">{supplement.title}</h5>
           <div className="mt-3"><ResourceMarkdown content={supplement.content} /></div>
@@ -1722,7 +1722,7 @@ function WorkflowProgress({ events, mode }: { events: WorkflowEvent[]; mode: "id
   return (
     <section className="rounded-2xl bg-[#0B1D2A] p-5 text-white" aria-label="Agent 实时工作状态">
       <div className="flex flex-wrap items-center justify-between gap-3"><div><p className="text-xs font-semibold tracking-[0.12em] text-white/55">Agent 工作状态</p><h5 className="mt-2 text-lg font-semibold">协同工作流</h5></div><span className="rounded-full bg-white/10 px-3 py-2 text-xs font-semibold text-white/75">{modeLabel}</span></div>
-      <ol className="mt-5 grid gap-2">{workflowStages.map((stage, index) => { const event = events.find((item) => item.agent === stage.agent); const status = event?.status || "pending"; const color = status === "done" ? "bg-emerald-400" : status === "running" ? "bg-[#B99DFF] animate-pulse" : status === "error" ? "bg-red-400" : "bg-white/25"; const label = status === "done" ? "已完成" : status === "running" ? "进行中" : status === "error" ? "异常" : "等待中"; return <li className="flex items-center gap-3 rounded-xl bg-white/[0.06] px-3 py-3 text-sm" key={stage.agent}><span className={`h-2.5 w-2.5 shrink-0 rounded-full ${color}`} /><span className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-white/10 text-[11px]">0{index + 1}</span><span className="shrink-0 font-semibold">{stage.label}</span><span className="min-w-0 flex-1 text-right text-xs leading-5 text-white/60">{event?.message || label}</span></li>; })}</ol>
+      <ol className="mt-5 grid gap-2">{workflowStages.map((stage, index) => { const event = events.find((item) => item.agent === stage.agent); const status = event?.status || "pending"; const color = status === "done" ? "bg-emerald-400" : status === "running" ? "bg-[#4FD6B4] animate-pulse" : status === "error" ? "bg-red-400" : "bg-white/25"; const label = status === "done" ? "已完成" : status === "running" ? "进行中" : status === "error" ? "异常" : "等待中"; return <li className="flex items-center gap-3 rounded-xl bg-white/[0.06] px-3 py-3 text-sm" key={stage.agent}><span className={`h-2.5 w-2.5 shrink-0 rounded-full ${color}`} /><span className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-white/10 text-[11px]">0{index + 1}</span><span className="shrink-0 font-semibold">{stage.label}</span><span className="min-w-0 flex-1 text-right text-xs leading-5 text-white/60">{event?.message || label}</span></li>; })}</ol>
     </section>
   );
 }
@@ -1735,15 +1735,15 @@ function GenerationProgressScreen({ events, mode, notice }: { events: WorkflowEv
       <motion.section
         aria-live="polite"
         aria-label="生成进度"
-        className="fixed inset-x-3 bottom-3 top-3 z-[90] mx-auto flex max-w-[760px] flex-col overflow-y-auto rounded-[2rem] bg-[#F2F2EE]/95 p-6 text-[#192837] shadow-[0_28px_100px_rgba(25,40,55,0.34)] backdrop-blur-xl sm:inset-x-auto sm:bottom-auto sm:right-8 sm:top-1/2 sm:max-h-[calc(100dvh-48px)] sm:w-[min(720px,calc(100vw-64px))] sm:-translate-y-1/2 sm:p-8"
+        className="fixed inset-x-3 bottom-3 top-3 z-[90] mx-auto flex max-w-[760px] flex-col overflow-y-auto rounded-[2rem] glass-panel p-6 text-white shadow-[0_28px_100px_rgba(25,40,55,0.34)] sm:inset-x-auto sm:bottom-auto sm:right-8 sm:top-1/2 sm:max-h-[calc(100dvh-48px)] sm:w-[min(720px,calc(100vw-64px))] sm:-translate-y-1/2 sm:p-8"
         initial={reducedMotion ? false : { opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.08, duration: 0.48, ease }}
       >
-        <p className="text-xs font-semibold tracking-[0.16em] text-[#192837]/55">XH-AGENT</p>
+        <p className="text-xs font-semibold tracking-[0.16em] text-white/55">XH-AGENT</p>
         <h2 className="mt-3 font-[var(--font-heading)] text-3xl leading-tight sm:text-4xl">正在构建你的学习方案</h2>
-        <p className="mt-4 max-w-[60ch] text-sm leading-7 text-[#192837]/72">系统会依次完成学习画像诊断、知识检索、资源生成、内容审核与保真修正。完成后将自动进入学习工作台。</p>
-        {notice ? <p className="mt-4 max-w-[60ch] rounded-xl border border-amber-300/40 bg-amber-300/15 px-4 py-3 text-sm font-semibold leading-6 text-amber-700">{notice}</p> : null}
+        <p className="mt-4 max-w-[60ch] text-sm leading-7 text-white/72">系统会依次完成学习画像诊断、知识检索、资源生成、内容审核与保真修正。完成后将自动进入学习工作台。</p>
+        {notice ? <p className="mt-4 max-w-[60ch] rounded-xl border border-amber-300/40 bg-amber-300/15 px-4 py-3 text-sm font-semibold leading-6 text-amber-300">{notice}</p> : null}
         <div className="mt-8"><WorkflowProgress events={events} mode={mode} /></div>
       </motion.section>
     </>
@@ -1753,7 +1753,7 @@ function GenerationProgressScreen({ events, mode, notice }: { events: WorkflowEv
 function BrandMark() {
   return (
     <svg aria-label="XH Agent" className="h-8 w-8 shrink-0" fill="none" overflow="visible" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
-      <path d="M 64 128 L 64.5 128 L 32 95 L 0 64 L 0 0 L 64 0 L 128 64 L 128 64.5 L 161 32 L 192 0 L 256 0 L 256 64 L 192 128 L 128 128 L 128 192 L 96 223 L 63.5 256 L 0 256 L 0 192 Z M 256 192 L 224 223 L 191.5 256 L 128 256 L 128 192 L 192 128 L 256 128 Z" fill="#192837" />
+      <path d="M 64 128 L 64.5 128 L 32 95 L 0 64 L 0 0 L 64 0 L 128 64 L 128 64.5 L 161 32 L 192 0 L 256 0 L 256 64 L 192 128 L 128 128 L 128 192 L 96 223 L 63.5 256 L 0 256 L 0 192 Z M 256 192 L 224 223 L 191.5 256 L 128 256 L 128 192 L 192 128 L 256 128 Z" fill="currentColor" />
     </svg>
   );
 }
@@ -1762,7 +1762,7 @@ function ActionButton({ children, kind, onClick }: { children: ReactNode; kind: 
   const isAccent = kind === "accent";
   return (
     <motion.button
-      className={isAccent ? "rounded-full bg-[#7342E2] px-5 py-2.5 text-sm font-semibold text-white shadow-[0_4px_24px_rgba(115,66,226,0.28)]" : "rounded-full bg-[#F2F2EE] px-5 py-2.5 text-sm font-semibold text-[#192837]"}
+      className={isAccent ? "rounded-full bg-[#1E6E64] px-5 py-2.5 text-sm font-semibold text-white shadow-[0_4px_24px_rgba(30,110,100,0.28)]" : "rounded-full bg-white/12 px-5 py-2.5 text-sm font-semibold text-white backdrop-blur-md"}
       onClick={onClick}
       type="button"
       whileHover={{ scale: 1.04, filter: isAccent ? "brightness(1.1)" : "brightness(0.98)" }}
@@ -1829,13 +1829,13 @@ function ExpandedWorkspaceLayout({
         <div className="rounded-2xl bg-white/[0.07] p-4">
           <p className="text-xs font-semibold tracking-[0.14em] text-white/55">资源目录</p>
           <div className="mt-4 grid gap-2">
-            {workspaceResourceItems(resources).map((item, index) => <button aria-current={selectedResource === item.resource_type ? "page" : undefined} className={`flex items-center gap-3 rounded-xl px-3 py-3 text-left text-sm font-semibold transition ${selectedResource === item.resource_type ? "bg-[#7342E2] text-white shadow-[0_8px_20px_rgba(115,66,226,0.28)]" : "bg-white/[0.06] text-white/75 hover:bg-white/12 hover:text-white"}`} key={item.resource_type} onClick={() => setSelectedResource(item.resource_type)} type="button"><span className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-white/15 text-[11px]">0{index + 1}</span><span className="truncate">{resourceLabel(item.resource_type)}</span></button>)}
+            {workspaceResourceItems(resources).map((item, index) => <button aria-current={selectedResource === item.resource_type ? "page" : undefined} className={`flex items-center gap-3 rounded-xl px-3 py-3 text-left text-sm font-semibold transition ${selectedResource === item.resource_type ? "bg-[#1E6E64] text-white shadow-[0_8px_20px_rgba(30,110,100,0.28)]" : "bg-white/[0.06] text-white/75 hover:bg-white/12 hover:text-white"}`} key={item.resource_type} onClick={() => setSelectedResource(item.resource_type)} type="button"><span className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-white/15 text-[11px]">0{index + 1}</span><span className="truncate">{resourceLabel(item.resource_type)}</span></button>)}
             {!generationResult?.resources?.length ? <p className="px-3 py-2 text-sm leading-6 text-white/55">生成资源后显示目录</p> : null}
           </div>
           {generationResult?.resources?.length ? (
             <>
               <button
-                className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-white/[0.1] px-3 py-3 text-sm font-semibold text-white transition hover:bg-[#7342E2] hover:shadow-[0_8px_20px_rgba(115,66,226,0.28)]"
+                className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-white/[0.1] px-3 py-3 text-sm font-semibold text-white transition hover:bg-[#1E6E64] hover:shadow-[0_8px_20px_rgba(30,110,100,0.28)]"
                 onClick={onExport}
                 type="button"
               >
@@ -1843,7 +1843,7 @@ function ExpandedWorkspaceLayout({
                 导出全部资源
               </button>
               <button
-                className="mt-2 flex w-full items-center justify-center gap-2 rounded-xl bg-white/[0.1] px-3 py-3 text-sm font-semibold text-white transition hover:bg-[#7342E2] hover:shadow-[0_8px_20px_rgba(115,66,226,0.28)]"
+                className="mt-2 flex w-full items-center justify-center gap-2 rounded-xl bg-white/[0.1] px-3 py-3 text-sm font-semibold text-white transition hover:bg-[#1E6E64] hover:shadow-[0_8px_20px_rgba(30,110,100,0.28)]"
                 onClick={onExportMarkdown}
                 type="button"
               >
@@ -1856,13 +1856,13 @@ function ExpandedWorkspaceLayout({
         <div className="mt-4 rounded-2xl bg-white/[0.07] p-4">
           <p className="text-xs font-semibold tracking-[0.14em] text-white/55">协同工作流</p>
           <div className="mt-4 grid gap-2">
-            {workflowSteps.map((step, index) => <button aria-current={activeStep === index ? "step" : undefined} className={`flex items-center gap-3 rounded-xl px-3 py-3 text-left text-sm font-semibold transition ${activeStep === index ? "bg-white text-[#192837]" : "text-white/75 hover:bg-white/[0.08] hover:text-white"}`} key={step} onClick={() => { setActiveStep(index); onOpenWorkflow(index); }} type="button"><span className={`grid h-6 w-6 shrink-0 place-items-center rounded-full text-[11px] ${activeStep === index ? "bg-[#7342E2] text-white" : "bg-white/12"}`}>0{index + 1}</span><span>{step}</span></button>)}
+            {workflowSteps.map((step, index) => <button aria-current={activeStep === index ? "step" : undefined} className={`flex items-center gap-3 rounded-xl px-3 py-3 text-left text-sm font-semibold transition ${activeStep === index ? "bg-[#1E6E64] text-white" : "text-white/75 hover:bg-white/[0.08] hover:text-white"}`} key={step} onClick={() => { setActiveStep(index); onOpenWorkflow(index); }} type="button"><span className={`grid h-6 w-6 shrink-0 place-items-center rounded-full text-[11px] ${activeStep === index ? "bg-white text-[#1E6E64]" : "bg-white/12"}`}>0{index + 1}</span><span>{step}</span></button>)}
           </div>
         </div>
         <div className="mt-4 rounded-2xl bg-white/[0.07] p-4">
           <p className="text-xs font-semibold tracking-[0.14em] text-white/55">质量闸门</p>
           <div className="mt-4 grid gap-2">
-            {qualityGates.map((gate) => <button aria-pressed={selectedQualityGate === gate.id} className={`rounded-xl px-3 py-3 text-left text-sm font-semibold transition ${selectedQualityGate === gate.id ? "bg-white text-[#192837]" : "text-white/75 hover:bg-white/[0.08] hover:text-white"}`} key={gate.id} onClick={() => { setSelectedQualityGate(gate.id); onOpenQualityGate(gate.id); }} type="button">{gate.label}</button>)}
+            {qualityGates.map((gate) => <button aria-pressed={selectedQualityGate === gate.id} className={`rounded-xl px-3 py-3 text-left text-sm font-semibold transition ${selectedQualityGate === gate.id ? "bg-[#1E6E64] text-white" : "text-white/75 hover:bg-white/[0.08] hover:text-white"}`} key={gate.id} onClick={() => { setSelectedQualityGate(gate.id); onOpenQualityGate(gate.id); }} type="button">{gate.label}</button>)}
           </div>
         </div>
       </nav>
@@ -1885,7 +1885,7 @@ function ExpandedWorkspaceLayout({
           {resource.robot_metadata ? <div className="mt-4 rounded-xl bg-white/[0.07] px-4 py-3 text-xs leading-6 text-white/70"><span className="font-semibold text-white/85">适配信息</span>　{"目标品牌："}{brandDisplayName(resource.robot_metadata.brand)} | 控制器版本：{resource.robot_metadata.controller_version || "未标注"} | 适用机型：{resource.robot_metadata.applicable_model || "未标注"}</div> : null}
           <LookupChips instruction_links={resource.instruction_links} alarm_links={resource.alarm_links} />
           <References citations={resource.citations} />
-          {resource.key_takeaways?.length ? <aside className="mt-7 rounded-xl bg-white/[0.07] p-5"><p className="text-xs font-semibold text-white/60">学习重点</p><ul className="mt-3 grid gap-2 pl-5 text-sm leading-7 text-white/85 marker:text-[#B99DFF]">{resource.key_takeaways.map((item, index) => <li key={`${item}-${index}`}>{item}</li>)}</ul></aside> : null}
+          {resource.key_takeaways?.length ? <aside className="mt-7 rounded-xl bg-white/[0.07] p-5"><p className="text-xs font-semibold text-white/60">学习重点</p><ul className="mt-3 grid gap-2 pl-5 text-sm leading-7 text-white/85 marker:text-[#4FD6B4]">{resource.key_takeaways.map((item, index) => <li key={`${item}-${index}`}>{item}</li>)}</ul></aside> : null}
                 {isQuizResource(resource) ? (
                   <div className="mt-8 rounded-xl bg-white/[0.06] p-5 text-sm leading-7 text-white/75">
                     <p className="font-semibold text-white">答题说明</p>
@@ -1913,7 +1913,7 @@ function ExpandedWorkspaceLayout({
             const roundNumber = quizRoundNumber(resources, roundResource);
             return <section className="mt-10 border-t border-white/10 pt-8" key={roundResource.resource_id ?? roundResource.resource_type}>
               <header className="flex flex-wrap items-start justify-between gap-4"><div><p className="text-xs font-semibold text-white/55">{`\u7b2c ${roundNumber} \u8f6e\u6d4b\u8bd5`}</p><h5 className="mt-2 text-xl font-semibold leading-tight text-white">{roundResource.title}</h5></div>{roundResource.estimated_duration_minutes ? <span className="rounded-full bg-white/10 px-3 py-2 text-xs font-semibold text-white/75">预计 {roundResource.estimated_duration_minutes} 分钟</span> : null}</header>
-              {roundResource.key_takeaways?.length ? <aside className="mt-6 rounded-xl bg-white/[0.07] p-5"><p className="text-xs font-semibold text-white/60">学习重点</p><ul className="mt-3 grid gap-2 pl-5 text-sm leading-7 text-white/85 marker:text-[#B99DFF]">{roundResource.key_takeaways.map((item, index) => <li key={`${item}-${index}`}>{item}</li>)}</ul></aside> : null}
+              {roundResource.key_takeaways?.length ? <aside className="mt-6 rounded-xl bg-white/[0.07] p-5"><p className="text-xs font-semibold text-white/60">学习重点</p><ul className="mt-3 grid gap-2 pl-5 text-sm leading-7 text-white/85 marker:text-[#4FD6B4]">{roundResource.key_takeaways.map((item, index) => <li key={`${item}-${index}`}>{item}</li>)}</ul></aside> : null}
               <div className="mt-6 rounded-xl bg-white/[0.06] p-5 text-sm leading-7 text-white/75"><p className="font-semibold text-white">答题说明</p><p className="mt-2">请完成每一道题后提交。提交前不会显示标准答案或解析。</p></div>
               <LearningTools
             skillGaps={generationResult?.diagnosis?.skill_gaps}
@@ -1947,9 +1947,9 @@ function MobileMenu({ open, onClose, onNavigate, onOpenGenerator, onOpenWorkspac
       {open ? (
         <>
           <motion.button aria-label="关闭菜单遮罩" className="fixed inset-0 z-40 cursor-default bg-[rgba(25,40,55,0.35)] backdrop-blur-[4px]" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={onClose} />
-          <motion.aside aria-label="移动端导航" className="fixed right-0 top-0 z-50 flex h-[100dvh] w-[min(88vw,360px)] flex-col bg-[#CFC8C5] p-6 text-[#192837] shadow-[-12px_0_48px_rgba(25,40,55,0.18)]" initial={reducedMotion ? false : { x: "100%" }} animate={{ x: 0 }} exit={{ x: "100%" }} transition={{ duration: 0.45, ease }}>
-            <div className="flex items-center justify-between"><BrandMark /><button aria-label="关闭菜单" className="grid h-10 w-10 place-items-center rounded-full bg-white/55" onClick={onClose}><X size={20} strokeWidth={1.8} /></button></div>
-            <div className="mt-6 h-px bg-[#192837]/20" />
+          <motion.aside aria-label="移动端导航" className="fixed right-0 top-0 z-50 flex h-[100dvh] w-[min(88vw,360px)] flex-col glass-panel p-6 text-white shadow-[-12px_0_48px_rgba(25,40,55,0.18)]" initial={reducedMotion ? false : { x: "100%" }} animate={{ x: 0 }} exit={{ x: "100%" }} transition={{ duration: 0.45, ease }}>
+            <div className="flex items-center justify-between"><BrandMark /><button aria-label="关闭菜单" className="grid h-10 w-10 place-items-center rounded-full bg-white/10" onClick={onClose}><X size={20} strokeWidth={1.8} /></button></div>
+            <div className="mt-6 h-px bg-white/20" />
             <nav className="mt-9 grid gap-5" aria-label="移动端导航链接">
               {navigation.map((item, index) => <motion.button key={item} className="text-left text-2xl font-medium" type="button" initial={reducedMotion ? false : { opacity: 0, x: 18 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.18 + index * 0.07, duration: 0.35, ease }} onClick={() => { onNavigate(index); onClose(); }}>{item}</motion.button>)}
             </nav>
@@ -2609,87 +2609,92 @@ export function VaultShieldHero({ variant }: { variant: Variant }) {
   });
 
   return (
-    <section className={`relative isolate min-h-[100dvh] overflow-hidden bg-[#F2F2EE] font-[var(--font-body)] text-[#192837] ${schemeB ? "scheme-b" : "scheme-a"}`} onMouseLeave={resetPointer} onMouseMove={handlePointerMove}>
-      <motion.video autoPlay className="absolute inset-[-16px] z-0 h-[calc(100%+32px)] w-[calc(100%+32px)] object-cover" loop muted playsInline preload="metadata" style={reducedMotion ? undefined : { x: videoX, y: videoY }}>
-        <source src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260518_003132_8b7edcb6-c64d-4a52-a9ca-879942e122ad.mp4" type="video/mp4" />
-      </motion.video>
-      <div className="absolute inset-0 z-[1] bg-[#F2F2EE]/[0.14]" />
+    <section className={`relative isolate min-h-[100dvh] overflow-hidden font-[var(--font-body)] text-white ${schemeB ? "scheme-b" : "scheme-a"}`} onMouseLeave={resetPointer} onMouseMove={handlePointerMove}>
+      {/* 沉浸式动态背景层：固定铺满全屏、pointer-events:none 不挡交互。
+          视频文件：frontend/public/assets/background.mp4（替换该文件即可换背景）。 */}
+      <div className="immersive-bg" aria-hidden="true">
+        <div className="immersive-bg-fallback" />
+        <motion.video autoPlay muted loop playsInline preload="metadata" src="/assets/background.mp4" className="immersive-bg-video" style={reducedMotion ? undefined : { x: videoX, y: videoY }} />
+        <div className="immersive-bg-overlay" />
+      </div>
 
       <header className="relative z-50 mx-auto flex max-w-[1280px] items-center gap-3 px-5 py-4 max-[1023px]:[&>div]:hidden lg:gap-4 lg:[&>div>button]:px-3 lg:[&>div>button]:py-2 lg:[&>div>button]:text-xs xl:[&>div>button]:px-5 xl:[&>div>button]:py-2.5 xl:[&>div>button]:text-sm sm:px-8 sm:py-5">
         {!schemeB ? <BrandMark /> : null}
         <nav className="hidden shrink-0 items-center gap-5 text-[15px] lg:flex xl:gap-7 xl:text-base" aria-label="Primary navigation">
-          {navigation.map((item, index) => <button className={`relative whitespace-nowrap px-1 py-2 font-semibold leading-none transition-colors after:absolute after:bottom-0 after:left-1/2 after:h-0.5 after:w-4 after:-translate-x-1/2 after:rounded-full after:transition-transform ${activePanel === panelIds[index] ? "text-[#192837] after:scale-x-100 after:bg-[#7342E2]" : "text-[#192837]/60 after:scale-x-0 hover:text-[#192837]"}`} key={item} onClick={() => selectPanel(index)} type="button">{item}</button>)}
+          {navigation.map((item, index) => <button className={`relative whitespace-nowrap px-1 py-2 font-semibold leading-none transition-colors after:absolute after:bottom-0 after:left-1/2 after:h-0.5 after:w-4 after:-translate-x-1/2 after:rounded-full after:transition-transform ${activePanel === panelIds[index] ? "text-white after:scale-x-100 after:bg-[#4FD6B4]" : "text-white/60 after:scale-x-0 hover:text-white"}`} key={item} onClick={() => selectPanel(index)} type="button">{item}</button>)}
         </nav>
         <GlobalSearch />
         <div className="ml-auto hidden shrink-0 items-center gap-2 md:flex"><ActionButton kind="accent" onClick={openGenerator}>生成学习资源</ActionButton><ActionButton kind="quiet" onClick={() => setWorkspaceOpen(true)}>进入工作台</ActionButton></div>
-        <button aria-expanded={menuOpen} aria-label="打开菜单" className="grid h-10 w-10 place-items-center rounded-full bg-[#F2F2EE]/85 md:hidden" onClick={() => setMenuOpen(true)}><Menu size={21} strokeWidth={1.8} /></button>
+        <button aria-expanded={menuOpen} aria-label="打开菜单" className="grid h-10 w-10 place-items-center rounded-full bg-white/15 md:hidden" onClick={() => setMenuOpen(true)}><Menu size={21} strokeWidth={1.8} /></button>
       </header>
 
-      <button aria-expanded={menuOpen} aria-label="打开菜单" className="absolute left-5 top-4 z-20 hidden h-10 w-10 place-items-center rounded-full bg-[#F2F2EE]/85 md:grid lg:hidden sm:left-8 sm:top-5" onClick={() => setMenuOpen(true)} type="button"><Menu size={21} strokeWidth={1.8} /></button>
-      <div className={`relative z-10 mx-auto max-w-[1280px] px-5 sm:px-8 ${schemeB ? "lg:flex lg:items-end lg:justify-start lg:gap-6" : ""}`} style={{ paddingTop: "clamp(40px, 8vw, 72px)" }}>
-        <motion.div className={schemeB ? "max-w-[560px] rounded-[2rem] bg-[#F2F2EE]/78 p-7 shadow-[0_18px_60px_rgba(25,40,55,0.10)] backdrop-blur-[3px] sm:p-10" : "max-w-[560px]"} style={reducedMotion ? undefined : { x: mainX, y: mainY }}>
+      <button aria-expanded={menuOpen} aria-label="打开菜单" className="absolute left-5 top-4 z-20 hidden h-10 w-10 place-items-center rounded-full bg-white/15 md:grid lg:hidden sm:left-8 sm:top-5" onClick={() => setMenuOpen(true)} type="button"><Menu size={21} strokeWidth={1.8} /></button>
+      <div className={`relative z-10 mx-auto max-w-[1280px] px-5 sm:px-8 ${schemeB ? "flex flex-col pt-8 lg:min-h-[calc(100dvh-88px)] lg:justify-center lg:pt-0" : ""}`} style={schemeB ? undefined : { paddingTop: "clamp(40px, 8vw, 72px)" }}>
+        <div className={schemeB ? "flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between" : ""}>
+        <motion.div className={schemeB ? "max-w-[520px] rounded-[2rem] glass p-7 shadow-[0_18px_60px_rgba(25,40,55,0.10)] sm:p-10" : "max-w-[560px]"} style={reducedMotion ? undefined : { x: mainX, y: mainY }}>
           <motion.h1 {...fadeUp(0)} className="mb-6 font-[var(--font-heading)] text-[clamp(1.65rem,5vw,3rem)] font-bold leading-[1.05] tracking-[-0.01em]">领域知识个性化生成与多智能体协同决策系统</motion.h1>
           <motion.p {...fadeUp(1)} className="max-w-[560px] text-[clamp(0.9rem,2.5vw,1.1rem)] leading-[1.65] opacity-80">从目标追问到实时协同：XH-Agent 基于知识库检索生成讲义、实操指南、测试题、项目实战与避坑指南五类学习资源，并完成质量审核、保真修正与后续答疑。</motion.p>
-          <motion.button {...fadeUp(2)} className="mt-8 flex min-w-[210px] max-w-max items-center justify-between gap-8 rounded-[50px] bg-[#7342E2] px-6 py-[17px] text-[clamp(0.9rem,2vw,1rem)] font-semibold text-white shadow-[0_4px_24px_rgba(115,66,226,0.28)]" onClick={openGenerator} type="button" whileHover={{ scale: 1.04, filter: "brightness(1.1)" }} whileTap={{ scale: 0.96 }}>
+          <motion.button {...fadeUp(2)} className="mt-8 flex min-w-[210px] max-w-max items-center justify-between gap-8 rounded-[50px] bg-[#1E6E64] px-6 py-[17px] text-[clamp(0.9rem,2vw,1rem)] font-semibold text-white shadow-[0_4px_24px_rgba(30,110,100,0.28)]" onClick={openGenerator} type="button" whileHover={{ scale: 1.04, filter: "brightness(1.1)" }} whileTap={{ scale: 0.96 }}>
             开始定制学习方案 <ArrowRightCircle size={20} strokeWidth={1.8} />
           </motion.button>
         </motion.div>
         {schemeB ? (
-          <motion.aside className="mt-10 hidden w-[270px] shrink-0 rounded-[1.75rem] bg-[#F2F2EE]/82 p-6 text-[#192837] shadow-[0_18px_60px_rgba(25,40,55,0.12)] backdrop-blur-[4px] lg:mt-0 lg:block" style={reducedMotion ? undefined : { x: mainX, y: mainY }} aria-label="XH Agent 工作流">
-            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#192837]/55">协同工作流</p>
+          <motion.aside className="hidden w-[280px] shrink-0 rounded-[1.75rem] glass p-6 text-white shadow-[0_18px_60px_rgba(25,40,55,0.12)] lg:block" style={reducedMotion ? undefined : { x: mainX, y: mainY }} aria-label="XH Agent 工作流">
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-white/55">协同工作流</p>
             <h2 className="mt-2 font-[var(--font-heading)] text-2xl leading-tight">从目标澄清到学习闭环</h2>
-            <button className="mt-5 flex w-full items-center justify-between rounded-xl bg-[#192837]/[0.08] px-3 py-2 text-left text-xs font-semibold transition hover:bg-[#7342E2] hover:text-white" onClick={() => setHomeInfoDialog("workflow")} type="button"><span>查看流程说明</span><ArrowRightCircle size={16} strokeWidth={1.8} /></button>
+            <button className="mt-5 flex w-full items-center justify-between rounded-xl bg-white/10 px-3 py-2 text-left text-xs font-semibold transition hover:bg-[#1E6E64] hover:text-white" onClick={() => setHomeInfoDialog("workflow")} type="button"><span>查看流程说明</span><ArrowRightCircle size={16} strokeWidth={1.8} /></button>
             <ol className="mt-4 grid gap-4">
               {workflowSteps.map((step, index) => (
                 <motion.li className="flex cursor-default items-center gap-3 text-sm" key={step} onHoverEnd={() => setActiveStep(null)} onHoverStart={() => setActiveStep(index)} whileHover={reducedMotion ? undefined : { x: 4, scale: 1.02 }}>
-                  <span className={`grid h-7 w-7 place-items-center rounded-full text-xs font-semibold transition-colors ${activeStep === index ? "bg-[#7342E2] text-white" : "bg-[#192837]/[0.08]"}`}>0{index + 1}</span>
+                  <span className={`grid h-7 w-7 place-items-center rounded-full text-xs font-semibold transition-colors ${activeStep === index ? "bg-[#1E6E64] text-white" : "bg-white/10"}`}>0{index + 1}</span>
                   <span className="font-medium">{step}</span>
                 </motion.li>
               ))}
             </ol>
           </motion.aside>
         ) : null}
-      </div>
-      <motion.section key={activePanel} aria-live="polite" className="relative z-10 mx-auto mt-10 max-w-[1280px] px-5 pb-10 sm:px-8" initial={reducedMotion ? false : { opacity: 0 }} animate={{ opacity: 1 }} style={schemeB && !reducedMotion ? { x: mainX, y: mainY } : undefined} transition={{ duration: 0.35, ease }}>
-        <div className="max-w-[720px] rounded-[1.5rem] bg-[#F2F2EE]/70 p-6 shadow-[0_14px_42px_rgba(25,40,55,0.08)] backdrop-blur-[3px] sm:p-7">
-          <p className="text-xs font-semibold tracking-[0.12em] text-[#192837]/55">{panelDetails[activePanel].eyebrow}</p>
+        </div>
+      <motion.section key={activePanel} aria-live="polite" className={`relative z-10 ${schemeB ? "pb-8 pt-4" : "mx-auto mt-10 max-w-[1280px] px-5 pb-10 sm:px-8"}`} initial={reducedMotion ? false : { opacity: 0 }} animate={{ opacity: 1 }} style={schemeB && !reducedMotion ? { x: mainX, y: mainY } : undefined} transition={{ duration: 0.35, ease }}>
+        <div className="max-w-[640px] rounded-[1.5rem] glass p-6 shadow-[0_14px_42px_rgba(25,40,55,0.08)] sm:p-7">
+          <p className="text-xs font-semibold tracking-[0.12em] text-white/55">{panelDetails[activePanel].eyebrow}</p>
           <div className="mt-3 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <h2 className="font-[var(--font-heading)] text-2xl leading-tight">{panelDetails[activePanel].title}</h2>
-              <p className="mt-2 max-w-[540px] text-sm leading-6 text-[#192837]/75">{panelDetails[activePanel].description}</p>
+              <p className="mt-2 max-w-[540px] text-sm leading-6 text-white/75">{panelDetails[activePanel].description}</p>
             </div>
-            {activePanel === "overview" ? <button className="shrink-0 rounded-full bg-[#192837]/[0.08] px-3 py-2 text-xs font-semibold transition hover:bg-[#7342E2] hover:text-white" onClick={() => setHomeInfoDialog("overview")} type="button">查看系统说明</button> : <span className="shrink-0 rounded-full bg-[#192837]/[0.08] px-3 py-2 text-xs font-semibold">{panelDetails[activePanel].metric}</span>}
+            {activePanel === "overview" ? <button className="shrink-0 rounded-full bg-white/10 px-3 py-2 text-xs font-semibold transition hover:bg-[#1E6E64] hover:text-white" onClick={() => setHomeInfoDialog("overview")} type="button">查看系统说明</button> : <span className="shrink-0 rounded-full bg-white/10 px-3 py-2 text-xs font-semibold">{panelDetails[activePanel].metric}</span>}
           </div>
         </div>
       </motion.section>
+      </div>
       <MobileMenu onNavigate={selectPanel} onOpenGenerator={openGenerator} onOpenWorkspace={() => { setMenuOpen(false); setWorkspaceOpen(true); }} open={menuOpen} onClose={() => setMenuOpen(false)} />
       <AnimatePresence>
         {homeInfoDialog ? (
           <>
             <motion.button aria-label="关闭说明弹窗" className="fixed inset-0 z-50 bg-[#192837]/40 backdrop-blur-[4px]" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setHomeInfoDialog(null)} type="button" />
-            <motion.section aria-label={homeInfoDialog === "workflow" ? "协同工作流说明" : "系统概览说明"} className="fixed inset-x-4 top-1/2 z-[55] mx-auto max-h-[calc(100dvh-48px)] w-[min(680px,calc(100vw-32px))] -translate-y-1/2 overflow-y-auto rounded-[2rem] bg-[#F2F2EE] p-6 text-[#192837] shadow-[0_22px_72px_rgba(25,40,55,0.30)] sm:p-8" initial={reducedMotion ? false : { opacity: 0, y: 22, scale: 0.98 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 22, scale: 0.98 }} transition={{ duration: 0.3, ease }} role="dialog" aria-modal="true">
+            <motion.section aria-label={homeInfoDialog === "workflow" ? "协同工作流说明" : "系统概览说明"} className="fixed inset-x-4 top-1/2 z-[55] mx-auto max-h-[calc(100dvh-48px)] w-[min(680px,calc(100vw-32px))] -translate-y-1/2 overflow-y-auto rounded-[2rem] glass-panel p-6 text-white shadow-[0_22px_72px_rgba(25,40,55,0.30)] sm:p-8" initial={reducedMotion ? false : { opacity: 0, y: 22, scale: 0.98 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 22, scale: 0.98 }} transition={{ duration: 0.3, ease }} role="dialog" aria-modal="true">
               <div className="flex items-start justify-between gap-5">
                 <div>
-                  <p className="text-xs font-semibold tracking-[0.12em] text-[#192837]/55">{homeInfoDialog === "workflow" ? "协同工作流" : "系统概览"}</p>
+                  <p className="text-xs font-semibold tracking-[0.12em] text-white/55">{homeInfoDialog === "workflow" ? "协同工作流" : "系统概览"}</p>
                   <h2 className="mt-2 font-[var(--font-heading)] text-3xl leading-tight">{homeInfoDialog === "workflow" ? "每一步都有明确输入与输出" : "把学习目标变成可验证的进步"}</h2>
                 </div>
-                <button aria-label="关闭" className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[#192837]/[0.08] transition hover:bg-[#192837]/[0.15]" onClick={() => setHomeInfoDialog(null)} type="button"><X size={20} strokeWidth={1.8} /></button>
+                <button aria-label="关闭" className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-white/10 transition hover:bg-white/20" onClick={() => setHomeInfoDialog(null)} type="button"><X size={20} strokeWidth={1.8} /></button>
               </div>
               {homeInfoDialog === "workflow" ? (
                 <div className="mt-7 grid gap-3">
-                  <p className="text-sm leading-6 text-[#192837]/75">XH-Agent 会把一次学习请求拆成连续协作的任务。前一阶段的结论会成为后一阶段的依据，避免资源内容与学习目标脱节。</p>
-                  {["目标澄清：补齐学习范围、预期成果与时间边界。", "学情诊断：结合已有技能、专业和工作背景确定起点。", "知识检索与资源生成：从知识库检索相关内容，再生成讲义、实操指南、测试题、项目实战或避坑指南。", "内容审核与保真修正：检查资源是否有依据、难度是否匹配、表述是否可用。", "学习反馈：根据答题结果和学习疑问，补充解释、建议或下一轮资源。"].map((item, index) => <div className="flex gap-3 rounded-2xl bg-white/65 p-4" key={item}><span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-[#7342E2] text-xs font-semibold text-white">0{index + 1}</span><p className="text-sm font-medium leading-6">{item}</p></div>)}
+                  <p className="text-sm leading-6 text-white/75">XH-Agent 会把一次学习请求拆成连续协作的任务。前一阶段的结论会成为后一阶段的依据，避免资源内容与学习目标脱节。</p>
+                  {["目标澄清：补齐学习范围、预期成果与时间边界。", "学情诊断：结合已有技能、专业和工作背景确定起点。", "知识检索与资源生成：从知识库检索相关内容，再生成讲义、实操指南、测试题、项目实战或避坑指南。", "内容审核与保真修正：检查资源是否有依据、难度是否匹配、表述是否可用。", "学习反馈：根据答题结果和学习疑问，补充解释、建议或下一轮资源。"].map((item, index) => <div className="flex gap-3 rounded-2xl bg-white/[0.08] p-4" key={item}><span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-[#1E6E64] text-xs font-semibold text-white">0{index + 1}</span><p className="text-sm font-medium leading-6">{item}</p></div>)}
                 </div>
               ) : (
                 <div className="mt-7 grid gap-4">
-                  <p className="text-sm leading-6 text-[#192837]/75">系统概览展示项目如何从一个宽泛的学习愿望，逐步形成能学习、能练习、能反馈的个性化路径。</p>
+                  <p className="text-sm leading-6 text-white/75">系统概览展示项目如何从一个宽泛的学习愿望，逐步形成能学习、能练习、能反馈的个性化路径。</p>
                   <div className="grid gap-3 sm:grid-cols-2">
-                    {["明确目标：先识别过于宽泛的目标，并通过追问确定重点、成果和周期。", "可信生成：检索本地知识库，以检索结果约束讲义、实操指南、测试题、项目实战与避坑指南。", "可验证练习：测试题支持提交作答，再显示标准答案与解析。", "反馈迭代：学习者可以提出疑问，系统据此生成针对性补充与下一步建议。"].map((item, index) => <div className="rounded-2xl bg-white/65 p-4" key={item}><span className="text-xs font-semibold text-[#7342E2]">0{index + 1}</span><p className="mt-2 text-sm font-medium leading-6">{item}</p></div>)}
+                    {["明确目标：先识别过于宽泛的目标，并通过追问确定重点、成果和周期。", "可信生成：检索本地知识库，以检索结果约束讲义、实操指南、测试题、项目实战与避坑指南。", "可验证练习：测试题支持提交作答，再显示标准答案与解析。", "反馈迭代：学习者可以提出疑问，系统据此生成针对性补充与下一步建议。"].map((item, index) => <div className="rounded-2xl bg-white/[0.08] p-4" key={item}><span className="text-xs font-semibold text-[#4FD6B4]">0{index + 1}</span><p className="mt-2 text-sm font-medium leading-6">{item}</p></div>)}
                   </div>
-                  <div className="rounded-2xl bg-[#192837] p-5 text-white"><p className="text-xs font-semibold text-white/55">学习闭环</p><p className="mt-2 text-sm leading-6 text-white/85">目标澄清、学情诊断、知识检索、资源生成、审核修正、作答与反馈构成持续迭代的学习闭环。每次反馈都能成为下一次学习资源生成的输入。</p></div>
+                  <div className="rounded-2xl border border-[#4FD6B4]/20 bg-[#1E6E64]/[0.10] p-5 text-white"><p className="text-xs font-semibold text-white/55">学习闭环</p><p className="mt-2 text-sm leading-6 text-white/85">目标澄清、学情诊断、知识检索、资源生成、审核修正、作答与反馈构成持续迭代的学习闭环。每次反馈都能成为下一次学习资源生成的输入。</p></div>
                 </div>
               )}
-              <button className="mt-7 w-full rounded-full bg-[#7342E2] px-5 py-3 text-sm font-semibold text-white shadow-[0_4px_20px_rgba(115,66,226,0.25)] transition hover:brightness-110" onClick={() => setHomeInfoDialog(null)} type="button">我知道了</button>
+              <button className="mt-7 w-full rounded-full bg-[#1E6E64] px-5 py-3 text-sm font-semibold text-white shadow-[0_4px_20px_rgba(30,110,100,0.25)] transition hover:brightness-110" onClick={() => setHomeInfoDialog(null)} type="button">我知道了</button>
             </motion.section>
           </>
         ) : null}
@@ -2698,35 +2703,35 @@ export function VaultShieldHero({ variant }: { variant: Variant }) {
         {generatorOpen ? (
           <>
             <motion.button aria-label="关闭资源生成面板" className="fixed inset-0 z-30 bg-[#192837]/35 backdrop-blur-[4px]" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setGeneratorOpen(false)} type="button" />
-            <motion.section aria-label="生成学习资源" className="fixed inset-x-3 bottom-3 top-3 z-40 mx-auto max-w-[760px] overflow-y-auto rounded-[2rem] bg-[#F2F2EE] p-6 text-[#192837] shadow-[0_22px_72px_rgba(25,40,55,0.28)] sm:inset-x-auto sm:bottom-auto sm:right-8 sm:top-1/2 sm:max-h-[calc(100dvh-48px)] sm:w-[min(720px,calc(100vw-64px))] sm:-translate-y-1/2 sm:p-8" initial={reducedMotion ? false : { opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 28 }} transition={{ duration: 0.35, ease }} role="dialog" aria-modal="true">
+            <motion.section aria-label="生成学习资源" className="fixed inset-x-3 bottom-3 top-3 z-40 mx-auto max-w-[760px] overflow-y-auto rounded-[2rem] glass-panel p-6 text-white shadow-[0_22px_72px_rgba(25,40,55,0.28)] sm:inset-x-auto sm:bottom-auto sm:right-8 sm:top-1/2 sm:max-h-[calc(100dvh-48px)] sm:w-[min(720px,calc(100vw-64px))] sm:-translate-y-1/2 sm:p-8" initial={reducedMotion ? false : { opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 28 }} transition={{ duration: 0.35, ease }} role="dialog" aria-modal="true">
               <div className="flex items-start justify-between gap-5">
-                <div><p className="text-xs font-semibold tracking-[0.12em] text-[#192837]/55">学习画像</p><h2 className="mt-2 font-[var(--font-heading)] text-3xl leading-tight">先了解你的学习需求</h2></div>
-                <button aria-label="关闭" className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[#192837]/[0.08]" onClick={() => setGeneratorOpen(false)} type="button"><X size={20} strokeWidth={1.8} /></button>
+                <div><p className="text-xs font-semibold tracking-[0.12em] text-white/55">学习画像</p><h2 className="mt-2 font-[var(--font-heading)] text-3xl leading-tight">先了解你的学习需求</h2></div>
+                <button aria-label="关闭" className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-white/10" onClick={() => setGeneratorOpen(false)} type="button"><X size={20} strokeWidth={1.8} /></button>
               </div>
-              <section aria-label="演示样例" className="mt-6 rounded-2xl border border-[#7342E2]/20 bg-[#7342E2]/[0.06] p-4">
+              <section aria-label="演示样例" className="mt-6 rounded-2xl border border-[#4FD6B4]/20 bg-[#1E6E64]/[0.06] p-4">
                 <div className="flex items-center justify-between gap-3">
-                  <p className="text-sm font-semibold text-[#192837]">演示样例（比赛评审快速查看）</p>
-                  <span className="rounded-full bg-[#7342E2]/10 px-2.5 py-1 text-[11px] font-semibold text-[#7342E2]">预生成</span>
+                  <p className="text-sm font-semibold text-white">演示样例（比赛评审快速查看）</p>
+                  <span className="rounded-full bg-[#1E6E64]/10 px-2.5 py-1 text-[11px] font-semibold text-[#4FD6B4]">预生成</span>
                 </div>
-                <p className="mt-1 text-xs leading-5 text-[#192837]/60">预生成样例，用于快速展示不同背景学习者的差异化生成结果。</p>
+                <p className="mt-1 text-xs leading-5 text-white/60">预生成样例，用于快速展示不同背景学习者的差异化生成结果。</p>
                 <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:items-center">
-                  <select className="min-w-0 flex-1 rounded-xl bg-white/70 px-3 py-2.5 text-sm font-medium outline-none ring-[#7342E2] transition focus:ring-2" onChange={(event) => setDemoSampleId(event.target.value)} value={demoSampleId}>
+                  <select className="min-w-0 flex-1 rounded-xl bg-white/[0.08] px-3 py-2.5 text-sm font-medium outline-none ring-[#4FD6B4] transition focus:ring-2" onChange={(event) => setDemoSampleId(event.target.value)} value={demoSampleId}>
                     {DEMO_SAMPLE_OPTIONS.map((option) => <option key={option.id} value={option.id}>{option.label}</option>)}
                   </select>
-                  <button className="shrink-0 rounded-full border border-[#7342E2]/40 px-5 py-2.5 text-sm font-semibold text-[#7342E2] transition hover:bg-[#7342E2] hover:text-white disabled:cursor-not-allowed disabled:opacity-50" disabled={demoSampleLoading} onClick={() => void loadDemoSample()} type="button">{demoSampleLoading ? "加载中…" : "加载样例"}</button>
+                  <button className="shrink-0 rounded-full border border-[#4FD6B4]/40 px-5 py-2.5 text-sm font-semibold text-[#4FD6B4] transition hover:bg-[#1E6E64] hover:text-white disabled:cursor-not-allowed disabled:opacity-50" disabled={demoSampleLoading} onClick={() => void loadDemoSample()} type="button">{demoSampleLoading ? "加载中…" : "加载样例"}</button>
                 </div>
-                {demoSampleError ? <p className="mt-2 text-xs text-red-600">{demoSampleError}</p> : null}
+                {demoSampleError ? <p className="mt-2 text-xs text-red-300">{demoSampleError}</p> : null}
               </section>
               <form className="mt-7 grid gap-7" onSubmit={submitGeneration} ref={generationFormRef}>
-                <fieldset className="grid gap-3"><legend className="text-lg font-semibold">学习目标</legend><label className="grid gap-2 text-sm font-medium">希望完成什么学习任务<textarea className="min-h-24 resize-y rounded-xl bg-white/70 px-4 py-3 font-normal outline-none ring-[#7342E2] transition focus:ring-2" onChange={(event) => { setLearningGoal(event.target.value); setTopic(event.target.value); }} placeholder="例如：掌握 LangGraph 多智能体 AI 应用开发" required value={learningGoal} /></label></fieldset>
-                <fieldset className="grid gap-4"><legend className="text-lg font-semibold">基本信息</legend><div className="grid gap-3 sm:grid-cols-2"><label className="grid gap-2 text-sm font-medium">学历<select className="rounded-xl bg-white/70 px-3 py-3 font-normal outline-none ring-[#7342E2] transition focus:ring-2" onChange={(event) => setEducation(event.target.value)} value={education}><option>本科</option><option>硕士</option><option>博士</option><option>其他</option></select></label><label className="grid gap-2 text-sm font-medium">专业<input className="rounded-xl bg-white/70 px-3 py-3 font-normal outline-none ring-[#7342E2] transition focus:ring-2" onChange={(event) => setMajor(event.target.value)} placeholder="例如：计算机科学" value={major} /></label></div><label className="grid gap-2 text-sm font-medium">已掌握技能<input className="rounded-xl bg-white/70 px-4 py-3 font-normal outline-none ring-[#7342E2] transition focus:ring-2" onChange={(event) => setSkills(event.target.value)} placeholder="例如：Python、Flask、SQL" value={skills} /></label><div className="grid gap-2"><span className="text-sm font-medium">{"目标机器人品牌（可选）"}</span><div className="flex flex-wrap gap-2">{brandOptions.map((option) => <button aria-pressed={brand === option.id} className={`rounded-full px-3 py-2 text-sm font-medium transition ${brand === option.id ? "bg-[#7342E2] text-white" : "bg-[#192837]/[0.08] hover:bg-[#192837]/[0.14]"}`} key={option.label} onClick={() => setBrand(option.id)} type="button">{option.label}</button>)}</div></div></fieldset>
-                <fieldset className="grid gap-4"><legend className="text-lg font-semibold">工作背景</legend><div className="grid gap-3 sm:grid-cols-2"><label className="grid gap-2 text-sm font-medium">工作年限<span className="text-[#7342E2]">{workYears.toFixed(1)} 年</span><input className="accent-[#7342E2]" max="15" min="0" onChange={(event) => setWorkYears(Number(event.target.value))} step="0.5" type="range" value={workYears} /></label><label className="grid gap-2 text-sm font-medium">所在行业<input className="rounded-xl bg-white/70 px-3 py-3 font-normal outline-none ring-[#7342E2] transition focus:ring-2" onChange={(event) => setIndustry(event.target.value)} placeholder="例如：互联网" value={industry} /></label></div><label className="grid gap-2 text-sm font-medium">岗位<input className="rounded-xl bg-white/70 px-4 py-3 font-normal outline-none ring-[#7342E2] transition focus:ring-2" onChange={(event) => setRole(event.target.value)} placeholder="例如：Python 开发" value={role} /></label></fieldset>
-                <fieldset className="grid gap-3"><legend className="text-lg font-semibold">输出设置</legend><span className="text-sm font-medium">资源类型，可多选</span><div className="flex flex-wrap gap-2">{resourceOptions.map((option) => <button aria-pressed={resourceTypes.includes(option.id)} className={`rounded-full px-3 py-2 text-sm font-medium transition ${resourceTypes.includes(option.id) ? "bg-[#7342E2] text-white" : "bg-[#192837]/[0.08] hover:bg-[#192837]/[0.14]"}`} key={option.id} onClick={() => toggleResourceType(option.id)} type="button">{option.label}</button>)}</div><div className="mt-1 grid gap-2"><span className="text-sm font-medium">{"生成方式"}</span><div className="grid gap-2 sm:grid-cols-2"><button aria-pressed={demoMode} className={`rounded-xl px-4 py-3 text-sm font-medium transition ${demoMode ? "bg-[#7342E2] text-white" : "bg-[#192837]/[0.08] hover:bg-[#192837]/[0.14]"}`} onClick={() => setDemoMode(true)} type="button">{"使用演示数据"}</button><button aria-pressed={!demoMode} className={`rounded-xl px-4 py-3 text-sm font-medium transition ${!demoMode ? "bg-[#7342E2] text-white" : "bg-[#192837]/[0.08] hover:bg-[#192837]/[0.14]"}`} onClick={openApiKeyDialog} type="button">{"使用真实 API"}{!demoMode && apiKey ? " · 已填 Key" : ""}</button></div>{!demoMode && !apiKey ? <p className="text-xs text-[#192837]/60">{"真实模式下未填 Key 则使用后端 .env 配置。"}</p> : null}</div></fieldset>
-                {generationError ? <p className="text-sm text-red-700">{generationError}</p> : null}
-                <button className="mt-1 flex items-center justify-between rounded-full bg-[#7342E2] px-6 py-4 text-left font-semibold text-white shadow-[0_4px_24px_rgba(115,66,226,0.28)] transition hover:brightness-110 disabled:cursor-wait disabled:opacity-60" disabled={isGenerating} type="submit">{isGenerating ? "正在调用 XH-agent..." : "调用 XH-agent 生成"} <ArrowRightCircle size={20} strokeWidth={1.8} /></button>
+                <fieldset className="grid gap-3"><legend className="text-lg font-semibold">学习目标</legend><label className="grid gap-2 text-sm font-medium">希望完成什么学习任务<textarea className="min-h-24 resize-y rounded-xl bg-white/[0.08] px-4 py-3 font-normal outline-none ring-[#4FD6B4] transition focus:ring-2" onChange={(event) => { setLearningGoal(event.target.value); setTopic(event.target.value); }} placeholder="例如：掌握 LangGraph 多智能体 AI 应用开发" required value={learningGoal} /></label></fieldset>
+                <fieldset className="grid gap-4"><legend className="text-lg font-semibold">基本信息</legend><div className="grid gap-3 sm:grid-cols-2"><label className="grid gap-2 text-sm font-medium">学历<select className="rounded-xl bg-white/[0.08] px-3 py-3 font-normal outline-none ring-[#4FD6B4] transition focus:ring-2" onChange={(event) => setEducation(event.target.value)} value={education}><option>本科</option><option>硕士</option><option>博士</option><option>其他</option></select></label><label className="grid gap-2 text-sm font-medium">专业<input className="rounded-xl bg-white/[0.08] px-3 py-3 font-normal outline-none ring-[#4FD6B4] transition focus:ring-2" onChange={(event) => setMajor(event.target.value)} placeholder="例如：计算机科学" value={major} /></label></div><label className="grid gap-2 text-sm font-medium">已掌握技能<input className="rounded-xl bg-white/[0.08] px-4 py-3 font-normal outline-none ring-[#4FD6B4] transition focus:ring-2" onChange={(event) => setSkills(event.target.value)} placeholder="例如：Python、Flask、SQL" value={skills} /></label><div className="grid gap-2"><span className="text-sm font-medium">{"目标机器人品牌（可选）"}</span><div className="flex flex-wrap gap-2">{brandOptions.map((option) => <button aria-pressed={brand === option.id} className={`rounded-full px-3 py-2 text-sm font-medium transition ${brand === option.id ? "bg-[#1E6E64] text-white" : "bg-white/10 hover:bg-white/15"}`} key={option.label} onClick={() => setBrand(option.id)} type="button">{option.label}</button>)}</div></div></fieldset>
+                <fieldset className="grid gap-4"><legend className="text-lg font-semibold">工作背景</legend><div className="grid gap-3 sm:grid-cols-2"><label className="grid gap-2 text-sm font-medium">工作年限<span className="text-[#4FD6B4]">{workYears.toFixed(1)} 年</span><input className="accent-[#4FD6B4]" max="15" min="0" onChange={(event) => setWorkYears(Number(event.target.value))} step="0.5" type="range" value={workYears} /></label><label className="grid gap-2 text-sm font-medium">所在行业<input className="rounded-xl bg-white/[0.08] px-3 py-3 font-normal outline-none ring-[#4FD6B4] transition focus:ring-2" onChange={(event) => setIndustry(event.target.value)} placeholder="例如：互联网" value={industry} /></label></div><label className="grid gap-2 text-sm font-medium">岗位<input className="rounded-xl bg-white/[0.08] px-4 py-3 font-normal outline-none ring-[#4FD6B4] transition focus:ring-2" onChange={(event) => setRole(event.target.value)} placeholder="例如：Python 开发" value={role} /></label></fieldset>
+                <fieldset className="grid gap-3"><legend className="text-lg font-semibold">输出设置</legend><span className="text-sm font-medium">资源类型，可多选</span><div className="flex flex-wrap gap-2">{resourceOptions.map((option) => <button aria-pressed={resourceTypes.includes(option.id)} className={`rounded-full px-3 py-2 text-sm font-medium transition ${resourceTypes.includes(option.id) ? "bg-[#1E6E64] text-white" : "bg-white/10 hover:bg-white/15"}`} key={option.id} onClick={() => toggleResourceType(option.id)} type="button">{option.label}</button>)}</div><div className="mt-1 grid gap-2"><span className="text-sm font-medium">{"生成方式"}</span><div className="grid gap-2 sm:grid-cols-2"><button aria-pressed={demoMode} className={`rounded-xl px-4 py-3 text-sm font-medium transition ${demoMode ? "bg-[#1E6E64] text-white" : "bg-white/10 hover:bg-white/15"}`} onClick={() => setDemoMode(true)} type="button">{"使用演示数据"}</button><button aria-pressed={!demoMode} className={`rounded-xl px-4 py-3 text-sm font-medium transition ${!demoMode ? "bg-[#1E6E64] text-white" : "bg-white/10 hover:bg-white/15"}`} onClick={openApiKeyDialog} type="button">{"使用真实 API"}{!demoMode && apiKey ? " · 已填 Key" : ""}</button></div>{!demoMode && !apiKey ? <p className="text-xs text-white/60">{"真实模式下未填 Key 则使用后端 .env 配置。"}</p> : null}</div></fieldset>
+                {generationError ? <p className="text-sm text-red-300">{generationError}</p> : null}
+                <button className="mt-1 flex items-center justify-between rounded-full bg-[#1E6E64] px-6 py-4 text-left font-semibold text-white shadow-[0_4px_24px_rgba(30,110,100,0.28)] transition hover:brightness-110 disabled:cursor-wait disabled:opacity-60" disabled={isGenerating} type="submit">{isGenerating ? "正在调用 XH-agent..." : "调用 XH-agent 生成"} <ArrowRightCircle size={20} strokeWidth={1.8} /></button>
               </form>
               <AnimatePresence>
-                {resourceReady ? <motion.div className="mt-6 rounded-2xl bg-[#192837] p-5 text-white" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}><p className="text-xs font-semibold text-white/55">已准备好</p><h3 className="mt-2 text-lg font-semibold">{resourceTypes.map(resourceLabel).join("、")}：{topic}</h3><p className="mt-2 text-sm leading-6 text-white/75">结果已转入学习工作台。</p></motion.div> : null}
+                {resourceReady ? <motion.div className="mt-6 rounded-2xl border border-[#4FD6B4]/20 bg-[#1E6E64]/[0.10] p-5 text-white" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}><p className="text-xs font-semibold text-white/55">已准备好</p><h3 className="mt-2 text-lg font-semibold">{resourceTypes.map(resourceLabel).join("、")}：{topic}</h3><p className="mt-2 text-sm leading-6 text-white/75">结果已转入学习工作台。</p></motion.div> : null}
               </AnimatePresence>
             </motion.section>
           </>
@@ -2739,11 +2744,11 @@ export function VaultShieldHero({ variant }: { variant: Variant }) {
         {apiKeyDialogOpen ? (
           <>
             <motion.button aria-label="关闭 API Key 弹窗" className="fixed inset-0 z-50 bg-[#192837]/40 backdrop-blur-[4px]" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setApiKeyDialogOpen(false)} type="button" />
-            <motion.section aria-label="配置 API Key" className="fixed left-1/2 top-1/2 z-[60] w-[min(92vw,520px)] -translate-x-1/2 -translate-y-1/2 rounded-[2rem] bg-[#F2F2EE] p-6 text-[#192837] shadow-[0_24px_80px_rgba(25,40,55,0.3)] sm:p-8" initial={reducedMotion ? false : { opacity: 0, y: 20, scale: 0.97 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 20, scale: 0.97 }} transition={{ duration: 0.3, ease }} role="dialog" aria-modal="true">
-              <div className="flex items-start justify-between gap-5"><div><p className="text-xs font-semibold tracking-[0.12em] text-[#192837]/55">{"在线生成"}</p><h2 className="mt-2 font-[var(--font-heading)] text-3xl leading-tight">{"填写 API Key"}</h2></div><button aria-label="关闭" className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[#192837]/[0.08]" onClick={() => setApiKeyDialogOpen(false)} type="button"><X size={20} strokeWidth={1.8} /></button></div>
-              <p className="mt-4 text-sm leading-6 text-[#192837]/70">{"填入后切换到真实模式，由后端在线调用 LLM 生成资源。Key 仅存内存，后端重启后失效；留空则使用后端 .env 配置。"}</p>
-              <label className="mt-6 grid gap-2 text-sm font-medium">{"API Key"}<input autoFocus className="rounded-xl bg-white/70 px-4 py-3 font-normal outline-none ring-[#7342E2] transition focus:ring-2" onChange={(event) => setApiKey(event.target.value)} placeholder="sk-..." type="password" value={apiKey} /></label>
-              <div className="mt-7 flex items-center justify-end gap-3"><button className="rounded-full px-5 py-2.5 text-sm font-semibold text-[#192837]/70 transition hover:bg-[#192837]/[0.08]" onClick={() => setApiKeyDialogOpen(false)} type="button">{"取消"}</button><button className="rounded-full bg-[#7342E2] px-5 py-2.5 text-sm font-semibold text-white shadow-[0_4px_20px_rgba(115,66,226,0.25)] transition hover:brightness-110" onClick={() => setApiKeyDialogOpen(false)} type="button">{"确认"}</button></div>
+            <motion.section aria-label="配置 API Key" className="fixed left-1/2 top-1/2 z-[60] w-[min(92vw,520px)] -translate-x-1/2 -translate-y-1/2 rounded-[2rem] glass-panel p-6 text-white shadow-[0_24px_80px_rgba(25,40,55,0.3)] sm:p-8" initial={reducedMotion ? false : { opacity: 0, y: 20, scale: 0.97 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 20, scale: 0.97 }} transition={{ duration: 0.3, ease }} role="dialog" aria-modal="true">
+              <div className="flex items-start justify-between gap-5"><div><p className="text-xs font-semibold tracking-[0.12em] text-white/55">{"在线生成"}</p><h2 className="mt-2 font-[var(--font-heading)] text-3xl leading-tight">{"填写 API Key"}</h2></div><button aria-label="关闭" className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-white/10" onClick={() => setApiKeyDialogOpen(false)} type="button"><X size={20} strokeWidth={1.8} /></button></div>
+              <p className="mt-4 text-sm leading-6 text-white/70">{"填入后切换到真实模式，由后端在线调用 LLM 生成资源。Key 仅存内存，后端重启后失效；留空则使用后端 .env 配置。"}</p>
+              <label className="mt-6 grid gap-2 text-sm font-medium">{"API Key"}<input autoFocus className="rounded-xl bg-white/[0.08] px-4 py-3 font-normal outline-none ring-[#4FD6B4] transition focus:ring-2" onChange={(event) => setApiKey(event.target.value)} placeholder="sk-..." type="password" value={apiKey} /></label>
+              <div className="mt-7 flex items-center justify-end gap-3"><button className="rounded-full px-5 py-2.5 text-sm font-semibold text-white/70 transition hover:bg-white/10" onClick={() => setApiKeyDialogOpen(false)} type="button">{"取消"}</button><button className="rounded-full bg-[#1E6E64] px-5 py-2.5 text-sm font-semibold text-white shadow-[0_4px_20px_rgba(30,110,100,0.25)] transition hover:brightness-110" onClick={() => setApiKeyDialogOpen(false)} type="button">{"确认"}</button></div>
             </motion.section>
           </>
         ) : null}
@@ -2752,11 +2757,11 @@ export function VaultShieldHero({ variant }: { variant: Variant }) {
         {clarification ? (
           <>
             <motion.button aria-label="关闭学习目标追问" className="fixed inset-0 z-[90] bg-[#192837]/45 backdrop-blur-[5px]" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setClarification(null)} type="button" />
-            <motion.section aria-label="细化学习目标" className="fixed left-1/2 top-1/2 z-[100] max-h-[calc(100dvh-48px)] w-[min(92vw,620px)] -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-[2rem] bg-[#F2F2EE] p-6 text-[#192837] shadow-[0_24px_80px_rgba(25,40,55,0.3)] sm:p-8" initial={reducedMotion ? false : { opacity: 0, y: 20, scale: 0.97 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 20, scale: 0.97 }} transition={{ duration: 0.32, ease }} role="dialog" aria-modal="true">
-              <div className="flex items-start justify-between gap-5"><div><p className="text-xs font-semibold tracking-[0.12em] text-[#192837]/55">学习目标追问</p><h2 className="mt-2 font-[var(--font-heading)] text-3xl leading-tight">先把学习方向说清楚</h2></div><button aria-label="关闭" className="grid h-10 w-10 place-items-center rounded-full bg-[#192837]/[0.08]" onClick={() => setClarification(null)} type="button"><X size={20} strokeWidth={1.8} /></button></div>
-              <p className="mt-5 rounded-2xl bg-[#7342E2]/10 p-4 text-sm leading-7 text-[#192837]/80">{clarification.reason}</p>
-              <div className="mt-6 grid gap-6">{clarification.questions.map((item) => <fieldset className="grid gap-3" key={item.id}><legend className="text-base font-semibold">{item.label}</legend><p className="-mt-1 text-sm text-[#192837]/65">{item.helper}</p>{item.options ? <div className="flex flex-wrap gap-2">{item.options.map((option) => <button aria-pressed={clarificationAnswers[item.id] === option} className={`rounded-full px-4 py-2 text-sm font-semibold transition ${clarificationAnswers[item.id] === option ? "bg-[#7342E2] text-white" : "bg-[#192837]/[0.08] text-[#192837] hover:bg-[#192837]/[0.14]"}`} key={option} onClick={() => setClarificationAnswers((current) => ({ ...current, [item.id]: option }))} type="button">{option}</button>)}</div> : <textarea className="min-h-24 resize-y rounded-xl bg-white px-4 py-3 text-sm outline-none ring-[#7342E2] focus:ring-2" onChange={(event) => setClarificationAnswers((current) => ({ ...current, [item.id]: event.target.value }))} placeholder="请用一句话描述你希望完成的成果" value={clarificationAnswers[item.id] || ""} />}</fieldset>)}</div>
-              <button className="mt-8 flex w-full items-center justify-between rounded-full bg-[#7342E2] px-6 py-4 font-semibold text-white shadow-[0_4px_24px_rgba(115,66,226,0.28)] transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50" disabled={clarification.questions.some((item) => !clarificationAnswers[item.id]?.trim())} onClick={confirmClarification} type="button">确认目标并生成资源<ArrowRightCircle size={20} /></button>
+            <motion.section aria-label="细化学习目标" className="fixed left-1/2 top-1/2 z-[100] max-h-[calc(100dvh-48px)] w-[min(92vw,620px)] -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-[2rem] glass-panel p-6 text-white shadow-[0_24px_80px_rgba(25,40,55,0.3)] sm:p-8" initial={reducedMotion ? false : { opacity: 0, y: 20, scale: 0.97 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 20, scale: 0.97 }} transition={{ duration: 0.32, ease }} role="dialog" aria-modal="true">
+              <div className="flex items-start justify-between gap-5"><div><p className="text-xs font-semibold tracking-[0.12em] text-white/55">学习目标追问</p><h2 className="mt-2 font-[var(--font-heading)] text-3xl leading-tight">先把学习方向说清楚</h2></div><button aria-label="关闭" className="grid h-10 w-10 place-items-center rounded-full bg-white/10" onClick={() => setClarification(null)} type="button"><X size={20} strokeWidth={1.8} /></button></div>
+              <p className="mt-5 rounded-2xl bg-[#1E6E64]/10 p-4 text-sm leading-7 text-white/80">{clarification.reason}</p>
+              <div className="mt-6 grid gap-6">{clarification.questions.map((item) => <fieldset className="grid gap-3" key={item.id}><legend className="text-base font-semibold">{item.label}</legend><p className="-mt-1 text-sm text-white/65">{item.helper}</p>{item.options ? <div className="flex flex-wrap gap-2">{item.options.map((option) => <button aria-pressed={clarificationAnswers[item.id] === option} className={`rounded-full px-4 py-2 text-sm font-semibold transition ${clarificationAnswers[item.id] === option ? "bg-[#1E6E64] text-white" : "bg-white/10 text-white hover:bg-white/15"}`} key={option} onClick={() => setClarificationAnswers((current) => ({ ...current, [item.id]: option }))} type="button">{option}</button>)}</div> : <textarea className="min-h-24 resize-y rounded-xl bg-white/[0.06] px-4 py-3 text-sm outline-none ring-[#4FD6B4] focus:ring-2" onChange={(event) => setClarificationAnswers((current) => ({ ...current, [item.id]: event.target.value }))} placeholder="请用一句话描述你希望完成的成果" value={clarificationAnswers[item.id] || ""} />}</fieldset>)}</div>
+              <button className="mt-8 flex w-full items-center justify-between rounded-full bg-[#1E6E64] px-6 py-4 font-semibold text-white shadow-[0_4px_24px_rgba(30,110,100,0.28)] transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50" disabled={clarification.questions.some((item) => !clarificationAnswers[item.id]?.trim())} onClick={confirmClarification} type="button">确认目标并生成资源<ArrowRightCircle size={20} /></button>
             </motion.section>
           </>
         ) : null}
@@ -2765,8 +2770,8 @@ export function VaultShieldHero({ variant }: { variant: Variant }) {
         {workspaceOpen ? (
           <>
             <motion.button aria-label="关闭学习工作台" className="fixed inset-0 z-30 bg-[#192837]/35 backdrop-blur-[4px]" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setWorkspaceOpen(false)} type="button" />
-            <motion.aside aria-label="学习工作台" className={`fixed bottom-0 right-0 top-0 z-40 flex flex-col overflow-y-auto bg-[#F2F2EE] px-6 pb-6 pt-24 text-[#192837] shadow-[-20px_0_70px_rgba(25,40,55,0.25)] transition-[width] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] sm:px-9 sm:pb-9 sm:pt-24 ${workspaceExpanded ? "w-full" : "w-[min(100%,600px)]"}`} initial={reducedMotion ? false : { x: "100%" }} animate={{ x: 0 }} exit={{ x: "100%" }} onScroll={(event) => setShowWorkspaceTopButton(event.currentTarget.scrollTop > 320)} ref={workspaceScrollRef} transition={{ duration: 0.42, ease }}>
-              <div className={`flex items-start justify-between gap-5 ${workspaceExpanded ? "mx-auto w-full max-w-[1120px]" : ""}`}><div><p className="text-xs font-semibold tracking-[0.12em] text-[#192837]/55">学习工作台</p><h2 className="mt-2 font-[var(--font-heading)] text-3xl leading-tight">协同任务状态</h2></div><div className="flex items-center gap-2"><button aria-label={workspaceExpanded ? "收缩为侧边栏" : "全屏展开"} className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[#192837]/[0.08] transition-transform hover:scale-105" onClick={() => setWorkspaceExpanded((expanded) => !expanded)} title={workspaceExpanded ? "收缩为侧边栏" : "全屏展开"} type="button">{workspaceExpanded ? <Minimize2 size={19} strokeWidth={1.8} /> : <Maximize2 size={19} strokeWidth={1.8} />}</button><button aria-label="关闭" className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[#192837]/[0.08] transition-transform hover:scale-105" onClick={() => { setWorkspaceExpanded(false); setWorkspaceOpen(false); }} title="关闭工作台" type="button"><X size={20} strokeWidth={1.8} /></button></div></div>
+            <motion.aside aria-label="学习工作台" className={`fixed bottom-0 right-0 top-0 z-40 flex flex-col overflow-y-auto glass-panel px-6 pb-6 pt-24 text-white shadow-[-20px_0_70px_rgba(25,40,55,0.25)] transition-[width] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] sm:px-9 sm:pb-9 sm:pt-24 ${workspaceExpanded ? "w-full" : "w-[min(100%,600px)]"}`} initial={reducedMotion ? false : { x: "100%" }} animate={{ x: 0 }} exit={{ x: "100%" }} onScroll={(event) => setShowWorkspaceTopButton(event.currentTarget.scrollTop > 320)} ref={workspaceScrollRef} transition={{ duration: 0.42, ease }}>
+              <div className={`flex items-start justify-between gap-5 ${workspaceExpanded ? "mx-auto w-full max-w-[1120px]" : ""}`}><div><p className="text-xs font-semibold tracking-[0.12em] text-white/55">学习工作台</p><h2 className="mt-2 font-[var(--font-heading)] text-3xl leading-tight">协同任务状态</h2></div><div className="flex items-center gap-2"><button aria-label={workspaceExpanded ? "收缩为侧边栏" : "全屏展开"} className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-white/10 transition-transform hover:scale-105" onClick={() => setWorkspaceExpanded((expanded) => !expanded)} title={workspaceExpanded ? "收缩为侧边栏" : "全屏展开"} type="button">{workspaceExpanded ? <Minimize2 size={19} strokeWidth={1.8} /> : <Maximize2 size={19} strokeWidth={1.8} />}</button><button aria-label="关闭" className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-white/10 transition-transform hover:scale-105" onClick={() => { setWorkspaceExpanded(false); setWorkspaceOpen(false); }} title="关闭工作台" type="button"><X size={20} strokeWidth={1.8} /></button></div></div>
                {workspaceExpanded ? <ExpandedWorkspaceLayout generationResult={generationResult} topic={topic} selectedResource={selectedResource} setSelectedResource={selectWorkspaceResource} activeStep={activeStep} setActiveStep={setActiveStep} selectedQualityGate={selectedQualityGate} setSelectedQualityGate={setSelectedQualityGate} onApplyRevision={applyRevision} onResolveQuiz={applyQuizAnswerKey} onGenerateAdaptiveQuiz={generateAdaptiveQuiz} quizAttempts={quizAttempts} onQuizAttemptChange={updateQuizAttempt} onExport={exportGeneratedResources} onExportMarkdown={exportGeneratedMarkdown} backendDemoMode={backendDemoMode} onOpenWorkflow={(index) => setWorkspaceDialog({ kind: "workflow", index })} onOpenQualityGate={(id) => setWorkspaceDialog({ kind: "quality", id })} /> : null}
                {resourceReady && generationResult ? (
                  <section className={`mt-7 rounded-2xl bg-[#192837] p-5 text-white shadow-[0_20px_50px_rgba(25,40,55,0.18)] sm:p-7 ${workspaceExpanded ? "hidden" : ""}`}>
@@ -2783,14 +2788,14 @@ export function VaultShieldHero({ variant }: { variant: Variant }) {
         {generationResult?.learning_path && <PlannedLearningPath path={generationResult.learning_path} resources={generationResult.resources} onSelectResource={setSelectedResource} />}
                     <div className="mt-6 flex flex-wrap gap-2" aria-label="资源类型">
                       {workspaceResourceItems(generationResult.resources ?? []).map((resource) => (
-                        <button aria-pressed={selectedResource === resource.resource_type} className={`rounded-full px-4 py-2.5 text-sm font-semibold transition ${selectedResource === resource.resource_type ? "bg-white text-[#192837]" : "bg-white/15 text-white hover:bg-white/25"}`} key={resource.resource_type} onClick={() => setSelectedResource(resource.resource_type)} type="button">
+                        <button aria-pressed={selectedResource === resource.resource_type} className={`rounded-full px-4 py-2.5 text-sm font-semibold transition ${selectedResource === resource.resource_type ? "bg-[#1E6E64] text-white" : "bg-white/15 text-white hover:bg-white/25"}`} key={resource.resource_type} onClick={() => setSelectedResource(resource.resource_type)} type="button">
                           {resourceLabel(resource.resource_type)}
                         </button>
                        ))}
                      </div>
                      {generationResult.generation_errors?.length ? <GenerationFailures key={generationSeq} errors={generationResult.generation_errors} onRegenerate={(item) => { void performGeneration(topic || learningGoal.trim(), item); }} /> : null}
                   </div>
-                  <button className="mt-5 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2.5 text-sm font-semibold text-[#192837] transition hover:bg-[#B99DFF]" onClick={exportGeneratedResources} type="button"><Download size={16} strokeWidth={1.9} />导出全部资源</button>
+                  <button className="mt-5 inline-flex items-center gap-2 rounded-full bg-[#1E6E64] px-4 py-2.5 text-sm font-semibold text-white transition hover:brightness-110" onClick={exportGeneratedResources} type="button"><Download size={16} strokeWidth={1.9} />导出全部资源</button>
                   <button className="mt-5 inline-flex items-center gap-2 rounded-full bg-white/15 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-white/25" onClick={exportGeneratedMarkdown} type="button"><Download size={16} strokeWidth={1.9} />导出 Markdown</button>
                   {selectedResource ? (() => {
                     const resources = generationResult.resources ?? [];
@@ -2816,7 +2821,7 @@ export function VaultShieldHero({ variant }: { variant: Variant }) {
                         {resource.key_takeaways?.length ? (
                           <aside className="mt-6 rounded-xl bg-white/[0.07] p-4">
                             <p className="text-xs font-semibold text-white/60">学习重点</p>
-                            <ul className="mt-3 grid gap-2 pl-5 text-sm leading-6 text-white/85 marker:text-[#B99DFF]">
+                            <ul className="mt-3 grid gap-2 pl-5 text-sm leading-6 text-white/85 marker:text-[#4FD6B4]">
                               {resource.key_takeaways.map((takeaway, index) => <li key={`${takeaway}-${index}`}>{takeaway}</li>)}
                             </ul>
                           </aside>
@@ -2848,7 +2853,7 @@ export function VaultShieldHero({ variant }: { variant: Variant }) {
                           const roundNumber = quizRoundNumber(resources, roundResource);
                           return <section className="mt-8 border-t border-white/10 pt-7" key={roundResource.resource_id ?? roundResource.resource_type}>
                             <header className="flex flex-wrap items-start justify-between gap-4"><div><p className="text-xs font-semibold text-white/60">{`\u7b2c ${roundNumber} \u8f6e\u6d4b\u8bd5`}</p><h5 className="mt-2 text-lg font-semibold leading-tight text-white">{roundResource.title}</h5></div>{roundResource.estimated_duration_minutes ? <span className="rounded-full bg-white/10 px-3 py-2 text-xs font-semibold text-white/80">预计 {roundResource.estimated_duration_minutes} 分钟</span> : null}</header>
-                            {roundResource.key_takeaways?.length ? <aside className="mt-5 rounded-xl bg-white/[0.07] p-4"><p className="text-xs font-semibold text-white/60">学习重点</p><ul className="mt-3 grid gap-2 pl-5 text-sm leading-6 text-white/85 marker:text-[#B99DFF]">{roundResource.key_takeaways.map((takeaway, index) => <li key={`${takeaway}-${index}`}>{takeaway}</li>)}</ul></aside> : null}
+                            {roundResource.key_takeaways?.length ? <aside className="mt-5 rounded-xl bg-white/[0.07] p-4"><p className="text-xs font-semibold text-white/60">学习重点</p><ul className="mt-3 grid gap-2 pl-5 text-sm leading-6 text-white/85 marker:text-[#4FD6B4]">{roundResource.key_takeaways.map((takeaway, index) => <li key={`${takeaway}-${index}`}>{takeaway}</li>)}</ul></aside> : null}
                             <div className="mt-5 rounded-xl bg-white/[0.06] p-5 text-sm leading-7 text-white/75"><p className="font-semibold text-white">答题说明</p><p className="mt-2">请完成每一道题后提交。提交前不会显示标准答案或解析。</p></div>
                             <LearningTools
             skillGaps={generationResult?.diagnosis?.skill_gaps}
@@ -2876,34 +2881,34 @@ export function VaultShieldHero({ variant }: { variant: Variant }) {
                <div className={`mt-8 grid gap-3 ${workspaceExpanded ? "hidden" : ""}`}>
                 {workflowSteps.map((step, index) => (
                   <div key={step}>
-                    <motion.button aria-expanded={activeStep === index} className="flex w-full items-center gap-4 rounded-2xl bg-white/65 p-4 text-left shadow-[0_8px_24px_rgba(25,40,55,0.05)]" onClick={() => setActiveStep(activeStep === index ? null : index)} type="button" whileHover={{ x: 4 }}>
-                      <span className={`grid h-9 w-9 shrink-0 place-items-center rounded-full text-sm font-semibold ${activeStep === index ? "bg-[#7342E2] text-white" : "bg-[#192837]/[0.08]"}`}>0{index + 1}</span><span className="flex-1 font-semibold">{step}</span><span className="text-xs text-[#192837]/55">{activeStep === index ? "收起" : "查看"}</span>
+                    <motion.button aria-expanded={activeStep === index} className="flex w-full items-center gap-4 rounded-2xl bg-white/[0.08] p-4 text-left shadow-[0_8px_24px_rgba(25,40,55,0.05)]" onClick={() => setActiveStep(activeStep === index ? null : index)} type="button" whileHover={{ x: 4 }}>
+                      <span className={`grid h-9 w-9 shrink-0 place-items-center rounded-full text-sm font-semibold ${activeStep === index ? "bg-[#1E6E64] text-white" : "bg-white/10"}`}>0{index + 1}</span><span className="flex-1 font-semibold">{step}</span><span className="text-xs text-white/55">{activeStep === index ? "收起" : "查看"}</span>
                     </motion.button>
                     <AnimatePresence>
-                      {activeStep === index ? <motion.div className="mt-2 rounded-2xl bg-[#192837]/[0.06] p-4 text-sm leading-6 text-[#192837]/80" initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }}>
-                        {index === 0 ? <><p className="font-semibold text-[#192837]">学情诊断</p><p className="mt-2">{generationResult?.diagnosis?.summary || "暂无诊断结果。请先生成学习资源。"}</p><div className="mt-3 flex flex-wrap gap-2"><span className="rounded-full bg-white/70 px-3 py-1 text-xs">学习风格：{generationResult?.diagnosis?.learning_style || "未返回"}</span><span className="rounded-full bg-white/70 px-3 py-1 text-xs">建议难度：{generationResult?.diagnosis?.recommended_difficulty || "未返回"}</span></div>{generationResult?.diagnosis?.skill_gaps?.length ? <div className="mt-3"><SkillGapCards gaps={generationResult.diagnosis.skill_gaps} /></div> : null}</> : null}
-                        {index === 1 ? <><p className="font-semibold text-[#192837]">知识生成</p><p className="mt-2">已返回 {generationResult?.resources?.length ?? 0} 种资源。点击上方资源标签可查看完整正文。</p></> : null}
-                        {index === 2 ? <><p className="font-semibold text-[#192837]">内容审核</p><p className="mt-2">{generationResult?.audit?.length ? generationResult.audit.map((audit) => `${resourceLabel(audit.resource_type || "")}: ${audit.verdict || "未返回"}`).join("；") : "暂无审核结果。"}</p></> : null}
+                      {activeStep === index ? <motion.div className="mt-2 rounded-2xl bg-white/[0.06] p-4 text-sm leading-6 text-white/80" initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }}>
+                        {index === 0 ? <><p className="font-semibold text-white">学情诊断</p><p className="mt-2">{generationResult?.diagnosis?.summary || "暂无诊断结果。请先生成学习资源。"}</p><div className="mt-3 flex flex-wrap gap-2"><span className="rounded-full bg-white/[0.08] px-3 py-1 text-xs">学习风格：{generationResult?.diagnosis?.learning_style || "未返回"}</span><span className="rounded-full bg-white/[0.08] px-3 py-1 text-xs">建议难度：{generationResult?.diagnosis?.recommended_difficulty || "未返回"}</span></div>{generationResult?.diagnosis?.skill_gaps?.length ? <div className="mt-3"><SkillGapCards gaps={generationResult.diagnosis.skill_gaps} dark /></div> : null}</> : null}
+                        {index === 1 ? <><p className="font-semibold text-white">知识生成</p><p className="mt-2">已返回 {generationResult?.resources?.length ?? 0} 种资源。点击上方资源标签可查看完整正文。</p></> : null}
+                        {index === 2 ? <><p className="font-semibold text-white">内容审核</p><p className="mt-2">{generationResult?.audit?.length ? generationResult.audit.map((audit) => `${resourceLabel(audit.resource_type || "")}: ${audit.verdict || "未返回"}`).join("；") : "暂无审核结果。"}</p></> : null}
                       </motion.div> : null}
                     </AnimatePresence>
                   </div>
                 ))}
               </div>
-              <div className="mt-8 rounded-2xl bg-[#192837] p-6 text-white"><p className="text-xs font-semibold text-white/55">质量闸门</p><div className="mt-4 grid grid-cols-3 gap-2 text-center text-xs font-semibold">{qualityGates.map((gate) => <button aria-pressed={selectedQualityGate === gate.id} className={`rounded-xl px-2 py-3 transition ${selectedQualityGate === gate.id ? "bg-white text-[#192837]" : "bg-white/10 text-white hover:bg-white/20"}`} key={gate.id} onClick={() => setSelectedQualityGate(gate.id)} type="button">{gate.label}</button>)}</div><AnimatePresence mode="wait"><motion.div className="mt-4 rounded-xl bg-white/10 p-4 text-sm leading-6 text-white/80" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} key={selectedQualityGate}>{selectedQualityGate === "evidence" ? <><p className="font-semibold text-white">依据校验</p><p className="mt-1">{generationResult?.audit?.length ? "以下为每种资源的审核结论。" : "生成后将展示每种资源的审核结论。"}</p>{generationResult?.audit?.length ? <ul className="mt-2 grid gap-1 text-xs">{generationResult.audit.map((audit, index) => <li key={`${audit.resource_type}-${index}`}>{resourceLabel(audit.resource_type || "资源")}：{audit.verdict || "未返回结论"}{audit.issues?.[0]?.detail ? `，${audit.issues[0].detail}` : ""}</li>)}</ul> : null}</> : null}{selectedQualityGate === "difficulty" ? <><p className="font-semibold text-white">难度匹配</p><p className="mt-1">建议难度：{generationResult?.diagnosis?.recommended_difficulty || "等待学情诊断"}</p>{generationResult?.resources?.length ? <ul className="mt-2 grid gap-1 text-xs">{generationResult.resources.map((resource, index) => <li key={`${resource.resource_type}-${index}`}>{resourceLabel(resource.resource_type)}：{resource.difficulty_level || "未返回难度"}</li>)}</ul> : <p className="mt-1 text-xs text-white/65">生成资源后将比较资源难度与学情诊断。</p>}</> : null}{selectedQualityGate === "expression" ? <><p className="font-semibold text-white">表达审核</p><p className="mt-1">{generationResult?.audit?.some((audit) => audit.issues?.length) ? "存在需要关注的表达或内容问题，请查看下方审核意见。" : generationResult ? "未返回额外表达问题，当前资源通过审核。" : "生成后将展示表达审核意见。"}</p>{generationResult?.audit?.flatMap((audit) => audit.issues ?? []).length ? <ul className="mt-2 grid gap-1 text-xs">{generationResult.audit.flatMap((audit) => audit.issues ?? []).map((issue, index) => <li key={`${issue.detail}-${index}`}>{issue.detail || "未提供具体问题"}</li>)}</ul> : null}</> : null}</motion.div></AnimatePresence></div>
+              <div className="mt-8 rounded-2xl border border-[#4FD6B4]/20 bg-[#1E6E64]/[0.10] p-6 text-white"><p className="text-xs font-semibold text-white/55">质量闸门</p><div className="mt-4 grid grid-cols-3 gap-2 text-center text-xs font-semibold">{qualityGates.map((gate) => <button aria-pressed={selectedQualityGate === gate.id} className={`rounded-xl px-2 py-3 transition ${selectedQualityGate === gate.id ? "bg-[#1E6E64] text-white" : "bg-white/10 text-white hover:bg-white/20"}`} key={gate.id} onClick={() => setSelectedQualityGate(gate.id)} type="button">{gate.label}</button>)}</div><AnimatePresence mode="wait"><motion.div className="mt-4 rounded-xl bg-white/10 p-4 text-sm leading-6 text-white/80" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} key={selectedQualityGate}>{selectedQualityGate === "evidence" ? <><p className="font-semibold text-white">依据校验</p><p className="mt-1">{generationResult?.audit?.length ? "以下为每种资源的审核结论。" : "生成后将展示每种资源的审核结论。"}</p>{generationResult?.audit?.length ? <ul className="mt-2 grid gap-1 text-xs">{generationResult.audit.map((audit, index) => <li key={`${audit.resource_type}-${index}`}>{resourceLabel(audit.resource_type || "资源")}：{audit.verdict || "未返回结论"}{audit.issues?.[0]?.detail ? `，${audit.issues[0].detail}` : ""}</li>)}</ul> : null}</> : null}{selectedQualityGate === "difficulty" ? <><p className="font-semibold text-white">难度匹配</p><p className="mt-1">建议难度：{generationResult?.diagnosis?.recommended_difficulty || "等待学情诊断"}</p>{generationResult?.resources?.length ? <ul className="mt-2 grid gap-1 text-xs">{generationResult.resources.map((resource, index) => <li key={`${resource.resource_type}-${index}`}>{resourceLabel(resource.resource_type)}：{resource.difficulty_level || "未返回难度"}</li>)}</ul> : <p className="mt-1 text-xs text-white/65">生成资源后将比较资源难度与学情诊断。</p>}</> : null}{selectedQualityGate === "expression" ? <><p className="font-semibold text-white">表达审核</p><p className="mt-1">{generationResult?.audit?.some((audit) => audit.issues?.length) ? "存在需要关注的表达或内容问题，请查看下方审核意见。" : generationResult ? "未返回额外表达问题，当前资源通过审核。" : "生成后将展示表达审核意见。"}</p>{generationResult?.audit?.flatMap((audit) => audit.issues ?? []).length ? <ul className="mt-2 grid gap-1 text-xs">{generationResult.audit.flatMap((audit) => audit.issues ?? []).map((issue, index) => <li key={`${issue.detail}-${index}`}>{issue.detail || "未提供具体问题"}</li>)}</ul> : null}</> : null}</motion.div></AnimatePresence></div>
             </motion.aside>
             <AnimatePresence>
               {workspaceDialog ? (
                 <>
                   <motion.button aria-label="关闭详情弹窗" className="fixed inset-0 z-[60] bg-[#192837]/45 backdrop-blur-[5px]" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setWorkspaceDialog(null)} type="button" />
-                  <motion.section aria-label="工作流详情" className="fixed left-1/2 top-1/2 z-[70] max-h-[min(760px,calc(100dvh-64px))] w-[min(92vw,680px)] -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-[1.75rem] bg-[#F2F2EE] p-6 text-[#192837] shadow-[0_24px_80px_rgba(25,40,55,0.3)] sm:p-8" initial={reducedMotion ? false : { opacity: 0, y: 20, scale: 0.97 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 20, scale: 0.97 }} transition={{ duration: 0.32, ease }} role="dialog" aria-modal="true">
+                  <motion.section aria-label="工作流详情" className="fixed left-1/2 top-1/2 z-[70] max-h-[min(760px,calc(100dvh-64px))] w-[min(92vw,680px)] -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-[1.75rem] glass-panel p-6 text-white shadow-[0_24px_80px_rgba(25,40,55,0.3)] sm:p-8" initial={reducedMotion ? false : { opacity: 0, y: 20, scale: 0.97 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 20, scale: 0.97 }} transition={{ duration: 0.32, ease }} role="dialog" aria-modal="true">
                     <div className="flex items-start justify-between gap-5">
                       <div>
-                        <p className="text-xs font-semibold tracking-[0.14em] text-[#192837]/55">{workspaceDialog.kind === "workflow" ? "协同工作流" : "质量闸门"}</p>
+                        <p className="text-xs font-semibold tracking-[0.14em] text-white/55">{workspaceDialog.kind === "workflow" ? "协同工作流" : "质量闸门"}</p>
                         <h3 className="mt-2 font-[var(--font-heading)] text-2xl leading-tight">{workspaceDialog.kind === "workflow" ? workflowSteps[workspaceDialog.index] : qualityGates.find((gate) => gate.id === workspaceDialog.id)?.label}</h3>
                       </div>
-                      <button aria-label="关闭详情" className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[#192837]/[0.08] transition-transform hover:scale-105" onClick={() => setWorkspaceDialog(null)} type="button"><X size={19} strokeWidth={1.8} /></button>
+                      <button aria-label="关闭详情" className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-white/10 transition-transform hover:scale-105" onClick={() => setWorkspaceDialog(null)} type="button"><X size={19} strokeWidth={1.8} /></button>
                     </div>
-                    <div className="mt-6 rounded-2xl bg-[#192837] p-5 text-white sm:p-6">
+                    <div className="mt-6 rounded-2xl border border-white/10 bg-white/[0.06] p-5 text-white sm:p-6">
                       {workspaceDialog.kind === "workflow" && workspaceDialog.index === 0 ? <><p className="text-sm font-semibold text-white/60">学习画像诊断</p><p className="mt-3 text-sm leading-7 text-white/85">{generationResult?.diagnosis?.summary || "生成资源后将展示学习目标、基础能力和知识缺口诊断。"}</p>{generationResult?.diagnosis?.skill_gaps?.length ? <div className="mt-5"><SkillGapCards gaps={generationResult.diagnosis.skill_gaps} dark /></div> : null}<LearningPathMap resources={generationResult?.resources} onSelectResource={(type) => { setSelectedResource(type); setWorkspaceDialog(null); }} path={generationResult?.learning_path} groups={buildLearningPath(coreMap, generationResult?.diagnosis?.skill_gaps)} /></> : null}
                       {workspaceDialog.kind === "workflow" && workspaceDialog.index === 1 ? <><p className="text-sm font-semibold text-white/60">RAG 知识生成</p><p className="mt-3 text-sm leading-7 text-white/85">根据学习画像检索知识库，生成与当前目标匹配的学习资源。本次已生成 {generationResult?.resources?.length ?? 0} 类资源。</p><div className="mt-5 grid gap-2 sm:grid-cols-3">{(generationResult?.resources ?? []).map((item) => <div className="rounded-xl bg-white/[0.08] px-4 py-3 text-sm text-white/85" key={item.resource_type}>{resourceLabel(item.resource_type)}<span className="mt-1 block text-xs text-white/55">{item.difficulty_level || "待评估难度"}</span></div>)}</div></> : null}
                       {workspaceDialog.kind === "workflow" && workspaceDialog.index === 2 ? <><p className="text-sm font-semibold text-white/60">内容审核与保真修正</p><p className="mt-3 text-sm leading-7 text-white/85">逐项检查资源的知识依据、难度匹配和表达质量，并保留需要修正的具体问题。</p><ul className="mt-5 grid gap-2 text-sm text-white/80">{(generationResult?.audit ?? []).map((item, index) => <li className="flex items-center justify-between gap-4 rounded-xl bg-white/[0.08] px-4 py-3" key={`dialog-audit-${index}`}><span>{resourceLabel(item.resource_type || "资源")}</span><span className="text-white/60">{auditVerdictLabel(item.verdict)}</span></li>)}</ul></> : null}
@@ -2919,26 +2924,26 @@ export function VaultShieldHero({ variant }: { variant: Variant }) {
               {safetyAckResource ? (
                 <>
                   <motion.div className="fixed inset-0 z-[75] bg-[#192837]/50 backdrop-blur-[6px]" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} />
-                  <motion.section aria-label="安全确认" className="fixed left-1/2 top-1/2 z-[80] w-[min(92vw,460px)] -translate-x-1/2 -translate-y-1/2 rounded-[1.75rem] bg-[#F2F2EE] p-6 text-[#192837] shadow-[0_24px_80px_rgba(25,40,55,0.3)] sm:p-7" initial={reducedMotion ? false : { opacity: 0, y: 20, scale: 0.97 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 20, scale: 0.97 }} transition={{ duration: 0.32, ease }} role="dialog" aria-modal="true">
+                  <motion.section aria-label="安全确认" className="fixed left-1/2 top-1/2 z-[80] w-[min(92vw,460px)] -translate-x-1/2 -translate-y-1/2 rounded-[1.75rem] glass-panel p-6 text-white shadow-[0_24px_80px_rgba(25,40,55,0.3)] sm:p-7" initial={reducedMotion ? false : { opacity: 0, y: 20, scale: 0.97 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 20, scale: 0.97 }} transition={{ duration: 0.32, ease }} role="dialog" aria-modal="true">
                     <div className="flex items-start gap-3">
                       <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-red-400/15 text-xl">⚠️</span>
                       <div>
                         <h3 className="font-[var(--font-heading)] text-xl leading-tight">安全确认</h3>
-                        <p className="mt-2 text-sm leading-7 text-[#192837]/75">本课程涉及工业机器人实操操作，存在机械伤害风险，请确认已接受基础安全培训并遵守现场操作规程。</p>
+                        <p className="mt-2 text-sm leading-7 text-white/75">本课程涉及工业机器人实操操作，存在机械伤害风险，请确认已接受基础安全培训并遵守现场操作规程。</p>
                       </div>
                     </div>
-                    <label className="mt-5 flex cursor-pointer items-center gap-3 rounded-2xl border border-[#192837]/10 bg-white px-4 py-3">
-                      <input checked={safetyAckChecked} className="h-4 w-4 accent-[#7342E2]" onChange={(event) => setSafetyAckChecked(event.target.checked)} type="checkbox" />
+                    <label className="mt-5 flex cursor-pointer items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.06] px-4 py-3">
+                      <input checked={safetyAckChecked} className="h-4 w-4 accent-[#4FD6B4]" onChange={(event) => setSafetyAckChecked(event.target.checked)} type="checkbox" />
                       <span className="text-sm font-medium">我已了解风险并遵守安全规范</span>
                     </label>
-                    <button className="mt-5 w-full rounded-full bg-[#192837] px-4 py-3 text-sm font-semibold text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40" disabled={!safetyAckChecked} onClick={confirmSafetyAck} type="button">确认进入</button>
+                    <button className="mt-5 w-full rounded-full bg-[#1E6E64] px-4 py-3 text-sm font-semibold text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40" disabled={!safetyAckChecked} onClick={confirmSafetyAck} type="button">确认进入</button>
                   </motion.section>
                 </>
               ) : null}
             </AnimatePresence>
             <AnimatePresence>
               {showWorkspaceTopButton ? (
-                <motion.button aria-label="返回工作台顶部" className="fixed bottom-7 right-7 z-50 grid h-11 w-11 place-items-center rounded-full bg-[#192837] text-white shadow-[0_10px_30px_rgba(25,40,55,0.28)] transition-transform hover:scale-105" initial={reducedMotion ? false : { opacity: 0, y: 12, scale: 0.9 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 12, scale: 0.9 }} onClick={scrollWorkspaceToTop} title="返回顶部" type="button" whileTap={{ scale: 0.94 }}>
+                <motion.button aria-label="返回工作台顶部" className="fixed bottom-7 right-7 z-50 grid h-11 w-11 place-items-center rounded-full bg-white/15 text-white shadow-[0_10px_30px_rgba(25,40,55,0.28)] transition-transform hover:scale-105" initial={reducedMotion ? false : { opacity: 0, y: 12, scale: 0.9 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 12, scale: 0.9 }} onClick={scrollWorkspaceToTop} title="返回顶部" type="button" whileTap={{ scale: 0.94 }}>
                   <ArrowUp size={20} strokeWidth={2} />
                 </motion.button>
               ) : null}

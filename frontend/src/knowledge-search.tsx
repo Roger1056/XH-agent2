@@ -27,9 +27,9 @@ export async function searchKnowledge(question: string): Promise<KnowledgeHit[]>
 // Shared with the existing global knowledge search panel.
 export function KnowledgeResults({ results, onOpen }: { results: KnowledgeHit[]; onOpen?: (hit: KnowledgeHit) => void }) {
   return <>{results.map((hit, index) => onOpen ? (
-    <button key={index} onClick={() => onOpen(hit)} className="block w-full rounded-xl px-3 py-2 text-left transition hover:bg-[#192837]/[0.06]" type="button">
-      <span className="block truncate text-sm font-semibold text-[#192837]">{hit.doc_title || hit.doc_id || "知识文档"}</span>
-      <span className="block truncate text-xs text-[#192837]/55">{hit.content}</span>
+    <button key={index} onClick={() => onOpen(hit)} className="block w-full rounded-xl px-3 py-2 text-left transition hover:bg-white/10" type="button">
+      <span className="block truncate text-sm font-semibold text-white/90">{hit.doc_title || hit.doc_id || "知识文档"}</span>
+      <span className="block truncate text-xs text-white/60">{hit.content}</span>
     </button>
   ) : (
     <article key={index} className="mt-3 rounded-xl bg-black/20 p-3">

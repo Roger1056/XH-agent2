@@ -61,13 +61,13 @@ export function ScaffoldPanel({ skillGaps, onApplyRevision }: {
     <h5 className="text-lg font-semibold text-white">学习答疑 · 先思考，再看答案</h5>
     <p className="mt-2 text-xs leading-6 text-white/60">支持的知识点将提供分步提示，其他问题将展示知识库检索片段与来源。</p>
     <form className="mt-4 grid gap-3" onSubmit={(event) => { event.preventDefault(); void ask(); }}>
-      <textarea aria-label="学习问题" maxLength={1500} disabled={busy} value={question} onChange={(event) => setQuestion(event.target.value)} placeholder="例如：机器人坐标系如何选择？" className="min-h-24 w-full rounded-xl bg-black/20 p-3 text-sm text-white focus:ring-2 focus:ring-[#B99DFF]" />
-      <button type="submit" disabled={busy || !question.trim()} className="rounded-full bg-white px-4 py-3 text-sm font-semibold text-[#192837] disabled:opacity-50">{busy ? "正在获取回答…" : "开始提问"}</button>
+      <textarea aria-label="学习问题" maxLength={1500} disabled={busy} value={question} onChange={(event) => setQuestion(event.target.value)} placeholder="例如：机器人坐标系如何选择？" className="min-h-24 w-full rounded-xl bg-black/20 p-3 text-sm text-white focus:ring-2 focus:ring-[#4FD6B4]" />
+      <button type="submit" disabled={busy || !question.trim()} className="rounded-full bg-[#1E6E64] px-4 py-3 text-sm font-semibold text-white disabled:opacity-50">{busy ? "正在获取回答…" : "开始提问"}</button>
     </form>
     <div aria-live="polite" aria-busy={busy} className="mt-4 grid gap-3">
       {(steps.length > 0 || direct !== null) && <p className="break-words text-xs text-white/60">当前问题：{activeQuestion}</p>}
       {steps.map((step) => <article key={step.tier} className="rounded-xl bg-[#0B1D2A] p-4">
-        <h6 className="text-sm font-semibold text-[#C7B3F5]">L{step.tier} · {step.tier === 1 ? "引导思考" : step.tier === 2 ? "给出线索" : "完整答案"}</h6>
+        <h6 className="text-sm font-semibold text-[#9BE8D4]">L{step.tier} · {step.tier === 1 ? "引导思考" : step.tier === 2 ? "给出线索" : "完整答案"}</h6>
         <p className="mt-2 whitespace-pre-wrap break-words text-sm leading-7 text-white/85">{step.content}</p>
         {step.revealed_answer && step.kb_source && <p className="mt-3 break-all text-xs text-white/60">知识库来源：{step.kb_source}</p>}
       </article>)}
@@ -76,11 +76,11 @@ export function ScaffoldPanel({ skillGaps, onApplyRevision }: {
     {latest && !latest.revealed_answer && !direct && <form className="mt-4 grid gap-3" onSubmit={(event) => { event.preventDefault(); void ask(true, reply.trim()); }}>
       <textarea aria-label="我的思考" maxLength={4000} value={reply} disabled={busy} onChange={(event) => setReply(event.target.value)} placeholder="写下你的判断，或点击下方按钮继续" className="min-h-20 rounded-xl bg-black/20 p-3 text-sm text-white" />
       <div className="flex flex-wrap gap-2">
-        <button disabled={busy} type="submit" className="rounded-full bg-[#7342E2] px-4 py-2 text-sm text-white disabled:opacity-50">{latest.tier === 1 ? "下一步提示" : "查看完整答案"}</button>
+        <button disabled={busy} type="submit" className="rounded-full bg-[#1E6E64] px-4 py-2 text-sm text-white disabled:opacity-50">{latest.tier === 1 ? "下一步提示" : "查看完整答案"}</button>
         <button disabled={busy} type="button" onClick={() => void ask(true, "不知道，卡住了")} className="rounded-full bg-white/10 px-4 py-2 text-sm text-white disabled:opacity-50">我不知道，查看答案</button>
       </div>
     </form>}
     {error && <p role="alert" className="mt-3 text-sm text-red-200">{error} 请点击原按钮重试。</p>}
-    {finalAnswer && <button type="button" disabled={applied || busy} onClick={() => { onApplyRevision(finalAnswer); setApplied(true); }} className="mt-4 rounded-full bg-[#7342E2] px-4 py-2 text-xs text-white disabled:opacity-50">{applied ? "补充已加入当前资源" : "将补充内容加入当前资源"}</button>}
+    {finalAnswer && <button type="button" disabled={applied || busy} onClick={() => { onApplyRevision(finalAnswer); setApplied(true); }} className="mt-4 rounded-full bg-[#1E6E64] px-4 py-2 text-xs text-white disabled:opacity-50">{applied ? "补充已加入当前资源" : "将补充内容加入当前资源"}</button>}
   </section>;
 }

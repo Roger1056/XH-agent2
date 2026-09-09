@@ -33,12 +33,12 @@ export function PlannedLearningPath({ path, resources = [], onSelectResource }: 
           : resources.find((item) => item.resource_type === node.resource_type);
         return <li key={node.node_id} className="rounded-xl bg-white/[0.06] p-4">
           <div className="flex items-start gap-3">
-            <span className="rounded-full bg-[#7342E2]/30 px-2 py-1 text-xs text-[#C7B3F5]">{index + 1}</span>
+            <span className="rounded-full bg-[#1E6E64]/30 px-2 py-1 text-xs text-[#9BE8D4]">{index + 1}</span>
             <div className="min-w-0 flex-1">
               <p className="break-words text-sm font-semibold text-white/90">{node.title}</p>
               <p className="mt-1 text-xs text-white/60">{({ beginner: "入门", intermediate: "进阶", advanced: "高级" } as Record<string, string>)[node.difficulty] ?? node.difficulty} · {node.estimated_duration_minutes} 分钟 · {node.is_completed ? "已完成" : "待学习"}</p>
               <p className="mt-2 break-words text-xs leading-5 text-white/60">前置：{node.depends_on.length ? node.depends_on.map((id) => names.get(id) ?? id).join("、") : "无，可直接开始"}</p>
-              {resource && onSelectResource ? <button type="button" onClick={() => onSelectResource(resource.resource_type)} className="mt-3 rounded-full bg-[#7342E2] px-3 py-1.5 text-xs text-white">查看配套资源</button> : <p className="mt-2 text-xs text-white/45">配套资源待生成</p>}
+              {resource && onSelectResource ? <button type="button" onClick={() => onSelectResource(resource.resource_type)} className="mt-3 rounded-full bg-[#1E6E64] px-3 py-1.5 text-xs text-white">查看配套资源</button> : <p className="mt-2 text-xs text-white/45">配套资源待生成</p>}
             </div>
           </div>
         </li>;
