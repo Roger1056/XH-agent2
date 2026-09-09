@@ -91,6 +91,12 @@ def fixture():
 
 @app.get("/api/knowledge/search")
 def knowledge_search(q: str, top_k: int = 5):
-    return {"results": [{"doc_id": "fixture-kb-001", "doc_title": "机器人学习知识库",
-                         "content": f"知识检索测试片段：{q}"}][:top_k]}
-
+    return {
+        "results": [
+            {
+                "doc_id": "fixture-kb-001",
+                "doc_title": "机器人学习知识库",
+                "content": f"知识检索测试片段：{q}",
+            }
+        ][:top_k]
+    }

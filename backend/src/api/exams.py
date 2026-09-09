@@ -289,6 +289,7 @@ class ScaffoldRequest(BaseModel):
     mode 分支：疑问句 + 能定位到知识点 → 'scaffold'；
     否则走原答疑（mode='direct'，不硬套脚手架）。
     """
+
     learner_id: str = Field(default="", max_length=160)
     question: str = Field(min_length=1, max_length=4000)
     current_tier: int = Field(default=0, ge=0, le=3)

@@ -61,7 +61,12 @@ def test_scaffold_trigger_and_l1():
     assert result["knowledge_point"] == "故障诊断"
     assert result["revealed_answer"] is False
     assert set(result) >= {
-        "mode", "tier", "content", "knowledge_point", "revealed_answer", "kb_source",
+        "mode",
+        "tier",
+        "content",
+        "knowledge_point",
+        "revealed_answer",
+        "kb_source",
     }
 
 
